@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>মুগ্ধ'র ইংলিশ মাস্টার | Class 4 English Exam & Practice</title>
+  <meta name="description" content="চতুর্থ শ্রেণির ইংরেজি (Units 11-18) এর জন্য ৪,০০০টি প্রশ্ন, মডেল টেস্ট ও সহজ ব্যাখ্যাসহ পূর্ণাঙ্গ মোবাইল প্র্যাকটিস অ্যাপ।">
+  <meta name="theme-color" content="#4f46e5">
+  
+  <!-- Google Bengali Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+<div class="app-viewport">
+  
+  <!-- APP HEADER -->
+  <header class="app-header">
+    <div class="brand-wrapper" onclick="app.navigate('home')">
+      <div class="avatar-icon">🎓</div>
+      <div class="brand-text">
+        <h1>ইংলিশ মাস্টার</h1>
+        <p>মুগ্ধ • চতুর্থ শ্রেণি (Units 11-18)</p>
+      </div>
+    </div>
+    
+    <div class="header-badges">
+      <div class="stat-chip stat-streak" title="টানা পড়ার দিন">
+        🔥 <span id="headerStreak">1</span>
+      </div>
+      <div class="stat-chip stat-star" title="মোট অর্জিত স্টার">
+        ⭐ <span id="headerStars">0</span>
+      </div>
+      <button class="icon-btn" id="soundToggleBtn" onclick="app.toggleSound()" title="সাউন্ড অন/অফ">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- SCREEN: HOME -->
+  <main id="screen-home" class="screen active">
+    <div class="hero-card">
+      <span class="hero-tag">🌟 ৪র্থ শ্রেণির চূড়ান্ত প্রস্তুতি</span>
+      <h2>স্বাগতম মুগ্ধ! 👋</h2>
+      <p>আজকের পরীক্ষার সব নিয়ম ও প্রশ্ন সহজে শিখে নাও। প্রতিটি বিষয়ে ১,০০০টি করে প্রশ্ন ও সহজ বাংলা ব্যাখ্যা রয়েছে!</p>
+      <div class="hero-actions">
+        <button class="btn-hero-primary" onclick="app.startQuickPractice()">
+          🚀 দ্রুত প্র্যাকটিস শুরু
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Features -->
+    <div class="quick-features-row">
+      <div class="feature-pill-btn" onclick="app.navigate('exam')">
+        <div class="f-icon">⏱️</div>
+        <div class="f-text">
+          <h4>মডেল টেস্ট</h4>
+          <p>টাইমারসহ পরীক্ষা</p>
+        </div>
+      </div>
+      <div class="feature-pill-btn" onclick="app.navigate('mistakes')">
+        <div class="f-icon">❌</div>
+        <div class="f-text">
+          <h4>ভুল খাতা</h4>
+          <p id="homeMistakesCount">০টি প্রশ্ন রিভিশন</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Main Subjects -->
+    <div class="section-title">
+      <span>📖 বিষয় নির্বাচন করো</span>
+      <span class="count-badge">৪টি বিষয় • ৪,০০০ প্রশ্ন</span>
+    </div>
+
+    <div class="subject-grid">
+      <!-- Verbs -->
+      <div class="subject-card" onclick="app.selectSubject('verbs')">
+        <div class="subject-icon-box icon-verbs">⚡</div>
+        <h3>Right Form of Verbs</h3>
+        <p class="sub-desc">ক্রিয়ার সঠিক রূপ ও টেন্সের ম্যাজিক নিয়ম</p>
+        <div class="sub-meta">
+          <span>১,০০০ প্রশ্ন</span>
+          <span>প্র্যাকটিস ➜</span>
+        </div>
+      </div>
+
+      <!-- Rearrange -->
+      <div class="subject-card" onclick="app.selectSubject('rearrange')">
+        <div class="subject-icon-box icon-rearrange">🧩</div>
+        <h3>Rearrange Sentences</h3>
+        <p class="sub-desc">শব্দ সাজিয়ে অর্থপূর্ণ বাক্য তৈরির কৌশল</p>
+        <div class="sub-meta">
+          <span>১,০০০ প্রশ্ন</span>
+          <span>প্র্যাকটিস ➜</span>
+        </div>
+      </div>
+
+      <!-- Articles -->
+      <div class="subject-card" onclick="app.selectSubject('articles')">
+        <div class="subject-icon-box icon-articles">🅰️</div>
+        <h3>Articles (A, An, The)</h3>
+        <p class="sub-desc">ধ্বনি, উচ্চারণ ও আর্টিকেল ব্যবহারের নিয়ম</p>
+        <div class="sub-meta">
+          <span>১,০০০ প্রশ্ন</span>
+          <span>প্র্যাকটিস ➜</span>
+        </div>
+      </div>
+
+      <!-- Prepositions -->
+      <div class="subject-card" onclick="app.selectSubject('prepositions')">
+        <div class="subject-icon-box icon-prepositions">📍</div>
+        <h3>Prepositions</h3>
+        <p class="sub-desc">At, In, On, To, By, For এর সঠিক ব্যবহার</p>
+        <div class="sub-meta">
+          <span>১,০০০ প্রশ্ন</span>
+          <span>প্র্যাকটিস ➜</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Grammar Guide Banner -->
+    <div class="rules-card" onclick="app.navigate('rules')" style="cursor: pointer; background: #eef2ff; border-color: #c7d2fe;">
+      <h3>💡 জাদুর ব্যাকরণ শিট ও টিপস ➜</h3>
+      <p>পরীক্ষায় ৩ সেকেন্ডে সঠিক উত্তর চেনার টেকনিক ও শর্টকাট সূত্রগুলো একনজরে দেখে নাও।</p>
+    </div>
+  </main>
+
+  <!-- SCREEN: PRACTICE -->
+  <main id="screen-practice" class="screen">
+    <div class="practice-header">
+      <!-- Unit Scroller Filter -->
+      <div class="unit-scroller" id="unitScroller">
+        <div class="unit-chip active" onclick="app.filterUnit('all')">সকল অধ্যায়</div>
+        <div class="unit-chip" onclick="app.filterUnit('Unit 11')">Unit 11: A Holiday Trip</div>
+        <div class="unit-chip" onclick="app.filterUnit('Unit 12')">Unit 12: Making Friends</div>
+        <div class="unit-chip" onclick="app.filterUnit('Unit 13')">Unit 13: Book Fair</div>
+        <div class="unit-chip" onclick="app.filterUnit('Unit 14')">Unit 14: Earth Tears</div>
+        <div class="unit-chip" onclick="app.filterUnit('Unit 15')">Unit 15: Pollution</div>
+        <div class="unit-chip" onclick="app.filterUnit('Unit 16')">Unit 16: Nepalese Boy</div>
+        <div class="unit-chip" onclick="app.filterUnit('Unit 17')">Unit 17: Mountains</div>
+        <div class="unit-chip" onclick="app.filterUnit('Unit 18')">Unit 18: Caring Others</div>
+        <div class="unit-chip" onclick="app.filterUnit('Class 4 Grammar Master')">Grammar Master</div>
+      </div>
+    </div>
+
+    <!-- Question Metadata -->
+    <div class="q-meta-bar">
+      <span class="q-badge-unit" id="practiceUnitBadge">Unit 11</span>
+      <span class="q-progress-text" id="practiceProgressText">প্রশ্ন: ১/১০০০</span>
+    </div>
+
+    <!-- Question Card -->
+    <div class="question-card" id="questionCard">
+      <div class="rule-pill" id="practiceRuleTag">Rule: Tense Indicator</div>
+      <div class="question-text" id="practiceQuestionText">
+        Last week, we ________ (travel) to Sylhet by train.
+      </div>
+
+      <!-- Rearrange Interactive Zone (Only shown for Rearrange) -->
+      <div class="rearrange-zone" id="rearrangeZone" style="display: none;">
+        <div class="answer-slot-box" id="answerSlotBox" placeholder="নিচের শব্দগুলোতে ট্যাপ করে সাজাও..."></div>
+        <div class="chip-pool" id="chipPool"></div>
+        <div class="chip-actions">
+          <button class="btn-chip-action" onclick="app.undoRearrange()">↩️ আগের শব্দ মুছো</button>
+          <button class="btn-chip-action" onclick="app.clearRearrange()">🔄 নতুন করে সাজাও</button>
+          <button class="btn-chip-action" style="background: #e0e7ff; color: #4338ca; font-weight:700;" onclick="app.submitRearrangeTap()">✅ উত্তর যাচাই করো</button>
+        </div>
+      </div>
+
+      <!-- MCQ Options Grid -->
+      <div class="options-grid" id="optionsGrid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Explanation Card (Appears after answer) -->
+      <div class="explanation-card" id="explanationCard">
+        <div class="exp-status-pill" id="expStatusPill">
+          <span>✅ সঠিক উত্তর!</span>
+        </div>
+
+        <div class="exp-section">
+          <div class="exp-label">সঠিক উত্তর</div>
+          <div class="exp-text" style="font-weight: 700; color: #065f46;" id="expAnswerText">travelled</div>
+        </div>
+
+        <div class="exp-section">
+          <div class="exp-label">বাংলা অর্থ</div>
+          <div class="exp-text" id="expTranslationText">গত সপ্তাহে আমরা ট্রেনে করে সিলেট ভ্রমণ করেছিলাম।</div>
+        </div>
+
+        <div class="exp-section">
+          <div class="exp-label">কেন এই উত্তর হলো? (সহজ নিয়ম ও ব্যাখ্যা)</div>
+          <div class="exp-text" id="expRuleText">বাক্যে 'Last week' থাকায় Past Indefinite Tense হয়েছে। তাই travel-এর Past form (V2) 'travelled' বসেছে।</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-bar">
+        <button class="btn-secondary" id="starQuestionBtn" onclick="app.toggleBookmarkCurrent()" title="স্টার দিয়ে রাখো">
+          ⭐ স্টার দাও
+        </button>
+        <button class="btn-primary" id="nextQuestionBtn" onclick="app.nextQuestion()">
+          পরের প্রশ্ন ➜
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCREEN: EXAM (MODEL TEST) -->
+  <main id="screen-exam" class="screen">
+    <!-- Setup Box -->
+    <div id="examSetupSection">
+      <div class="exam-setup-box">
+        <h3>⏱️ মডেল টেস্ট সেটআপ</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+          আসল পরীক্ষার মতো নির্দিষ্ট সময়ে প্রশ্ন সমাধান করো। পরীক্ষা শেষে বিস্তারিত মার্কশিট ও ভুল উত্তরের ব্যাখ্যা পাবে।
+        </p>
+
+        <div class="form-group">
+          <label>বিষয় নির্বাচন করো:</label>
+          <select id="examSubjectSelect" class="select-input">
+            <option value="mixed">🎯 অল-ইন-ওয়ান বোর্ড টেস্ট (সব বিষয়ের মিশ্রণ)</option>
+            <option value="verbs">⚡ Right Form of Verbs</option>
+            <option value="rearrange">🧩 Rearrange Sentences</option>
+            <option value="articles">🅰️ Articles (A, An, The)</option>
+            <option value="prepositions">📍 Prepositions</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>প্রশ্নের সংখ্যা:</label>
+          <select id="examCountSelect" class="select-input">
+            <option value="10">১০টি প্রশ্ন (দ্রুত পরীক্ষা)</option>
+            <option value="20" selected>২০টি প্রশ্ন (স্ট্যান্ডার্ড টেস্ট)</option>
+            <option value="50">৫০টি প্রশ্ন (পূর্ণাঙ্গ মডেল টেস্ট)</option>
+            <option value="100">১০০টি প্রশ্ন (গ্র্যান্ড এক্সাম)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>সময় নির্ধারণ:</label>
+          <select id="examTimeSelect" class="select-input">
+            <option value="5">৫ মিনিট</option>
+            <option value="10" selected>১০ মিনিট</option>
+            <option value="20">২০ মিনিট</option>
+            <option value="40">৪০ মিনিট</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" style="width: 100%; padding: 14px; font-size: 15px;" onclick="app.startExam()">
+          🚀 পরীক্ষা শুরু করো
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Exam Container -->
+    <div id="examActiveSection" style="display: none;">
+      <div class="exam-timer-bar">
+        <span>⏱️ সময় বাকি: <span class="timer-digits" id="examTimerDisplay">10:00</span></span>
+        <span id="examProgressDisplay">১/২০</span>
+      </div>
+
+      <div class="question-card">
+        <div class="rule-pill" id="examSubjectBadge">Right Form of Verbs</div>
+        <div class="question-text" id="examQuestionText">...</div>
+        <div class="options-grid" id="examOptionsGrid"></div>
+
+        <div class="action-bar" style="margin-top: 14px;">
+          <button class="btn-secondary" onclick="app.skipExamQuestion()">পরের প্রশ্ন ⏩</button>
+          <button class="btn-primary" style="background: #dc2626;" onclick="app.confirmSubmitExam()">পরীক্ষা জমা দাও 🏁</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCREEN: MISTAKES NOTEBOOK -->
+  <main id="screen-mistakes" class="screen">
+    <div class="mistakes-hero">
+      <h2>❌ ভুল উত্তরের খাতা</h2>
+      <p>মুগ্ধ, যে প্রশ্নগুলো ভুল হয়েছিল সেগুলো এখানে জমা আছে। প্রতিটি ভুল প্রশ্ন বুঝে নাও এবং دوبارہ প্র্যাকটিস করে ১০০% নিখুঁত করো!</p>
+    </div>
+
+    <!-- Mistakes Filter & Action -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+      <span style="font-size: 13px; font-weight: 700;" id="mistakesTotalCount">মোট ভুল: ০টি</span>
+      <button class="btn-hero-primary" style="padding: 6px 12px; font-size: 12px; background: #fee2e2; color: #991b1b;" onclick="app.practiceMistakesOnly()">
+        🔄 শুধু ভুলগুলো প্র্যাকটিস করো
+      </button>
+    </div>
+
+    <!-- Mistakes List Container -->
+    <div id="mistakesListContainer">
+      <!-- Dynamically rendered -->
+    </div>
+  </main>
+
+  <!-- SCREEN: DASHBOARD -->
+  <main id="screen-dashboard" class="screen">
+    <!-- Student Profile -->
+    <div class="profile-box">
+      <div class="profile-avatar">👦</div>
+      <div class="profile-info">
+        <h3>মুগ্ধ (Mugdho)</h3>
+        <p>চতুর্থ শ্রেণি • ইংলিশ মাস্টার প্র্যাকটিস</p>
+      </div>
+    </div>
+
+    <!-- Stats 4 Grid -->
+    <div class="stats-grid-4">
+      <div class="stat-box-card">
+        <div class="num" id="dashTotalAttempted">0</div>
+        <div class="lbl">মোট সমাধান</div>
+      </div>
+      <div class="stat-box-card">
+        <div class="num" style="color: var(--success);" id="dashAccuracy">0%</div>
+        <div class="lbl">সঠিকতার হার (Accuracy)</div>
+      </div>
+      <div class="stat-box-card">
+        <div class="num" style="color: #059669;" id="dashTotalCorrect">0</div>
+        <div class="lbl">সঠিক উত্তর</div>
+      </div>
+      <div class="stat-box-card">
+        <div class="num" style="color: #dc2626;" id="dashTotalWrong">0</div>
+        <div class="lbl">ভুল উত্তর</div>
+      </div>
+    </div>
+
+    <!-- Subject Breakdown Progress -->
+    <div class="progress-card">
+      <h4 style="font-size: 14px; font-weight: 800; margin-bottom: 12px;">📊 বিষয়ভিত্তিক অগ্রগতি</h4>
+
+      <div class="progress-row">
+        <div class="progress-row-header">
+          <span>⚡ Right Form of Verbs</span>
+          <span id="dashVerbsProg">0/1000 (0%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-verbs" id="dashVerbsBar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="progress-row">
+        <div class="progress-row-header">
+          <span>🧩 Rearrange Sentences</span>
+          <span id="dashRearrangeProg">0/1000 (0%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-rearrange" id="dashRearrangeBar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="progress-row">
+        <div class="progress-row-header">
+          <span>🅰️ Articles (A, An, The)</span>
+          <span id="dashArticlesProg">0/1000 (0%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-articles" id="dashArticlesBar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="progress-row">
+        <div class="progress-row-header">
+          <span>📍 Prepositions</span>
+          <span id="dashPrepositionsProg">0/1000 (0%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-prepositions" id="dashPrepositionsBar" style="width: 0%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievements & Badges -->
+    <div class="section-title">
+      <span>🎖️ অর্জিত মেডেল ও ব্যাজ</span>
+    </div>
+    <div class="badges-container" id="badgesContainer">
+      <div class="badge-item-card" id="badge-streak">
+        <div class="b-icon">🔥</div>
+        <div class="b-title">ধারাবাহিকতা</div>
+      </div>
+      <div class="badge-item-card" id="badge-verbs">
+        <div class="b-icon">⚡</div>
+        <div class="b-title">ভার্ব জিনিয়াস</div>
+      </div>
+      <div class="badge-item-card" id="badge-rearrange">
+        <div class="b-icon">🧩</div>
+        <div class="b-title">বাক্য কারিগর</div>
+      </div>
+      <div class="badge-item-card" id="badge-articles">
+        <div class="b-icon">👑</div>
+        <div class="b-title">আর্টিকেল রাজা</div>
+      </div>
+      <div class="badge-item-card" id="badge-prepositions">
+        <div class="b-icon">🚀</div>
+        <div class="b-title">প্রিপজিশন প্রো</div>
+      </div>
+      <div class="badge-item-card" id="badge-master">
+        <div class="b-icon">🏆</div>
+        <div class="b-title">ইংলিশ চ্যাম্পিয়ন</div>
+      </div>
+    </div>
+
+    <!-- Reset stats -->
+    <div style="text-align: center; margin-top: 10px;">
+      <button class="btn-secondary" style="font-size: 12px; color: #94a3b8; border-color: #e2e8f0;" onclick="app.resetAllData()">
+        ⚠️ সব ডাটা ও অগ্রগতি রিসেট করো
+      </button>
+    </div>
+  </main>
+
+  <!-- SCREEN: GRAMMAR RULES CHEAT SHEET -->
+  <main id="screen-rules" class="screen">
+    <div class="hero-card" style="background: linear-gradient(135deg, #0284c7, #2563eb);">
+      <h2>💡 জাদুর ব্যাকরণ শিট</h2>
+      <p>চতুর্থ শ্রেণির ইংরেজি ফাইনাল পরীক্ষায় দ্রুত ও নির্ভুল উত্তর করার সবচেয়ে সহজ কৌশল!</p>
+    </div>
+
+    <!-- Rule 1: Verbs Indicator -->
+    <div class="rules-card">
+      <h3>⚡ ১. টেন্স চেনার ৩ সেকেন্ডের ম্যাজিক ক্লু</h3>
+      <p>বাক্যের মধ্যে নিচের শব্দগুলো দেখলে সাথে সাথে সঠিক ভার্ব রূপ নির্বাচন করবে:</p>
+      <div class="rules-formula">👉 yesterday, last night, ago, once থাকলে ➜ Past Form (V2) বসে।</div>
+      <p style="font-size: 12px; color: var(--text-muted);">যেমন: He visited (visit) Cox's Bazar last year.</p>
+      <div class="rules-formula">👉 now, at this moment, look!, listen! থাকলে ➜ am/is/are + Verb-ing বসে।</div>
+      <p style="font-size: 12px; color: var(--text-muted);">যেমন: Look! The boy is planting (plant) a tree.</p>
+      <div class="rules-formula">👉 always, daily, everyday, usually থাকলে ➜ Present Form (V1) বসে।</div>
+      <p style="font-size: 12px; color: var(--text-muted);">Subject একজন হলে Verb-এ s/es যোগ হবে: She walks to school.</p>
+      <div class="rules-formula">👉 already, just, ever থাকলে ➜ Have/Has + V3 বসে।</div>
+      <div class="rules-formula">👉 tomorrow, next week থাকলে ➜ Will + V1 বসে।</div>
+      <div class="rules-formula">👉 can, could, should, must, to থাকলে ➜ মূল Verb (V1) বসে।</div>
+    </div>
+
+    <!-- Rule 2: Articles -->
+    <div class="rules-card">
+      <h3>🅰️ ২. আর্টিকেলের জাদুকরী নিয়ম (A, An, The)</h3>
+      <p>শব্দের প্রথম <strong>উচ্চারণ ধ্বনি</strong> লক্ষ্য করবে:</p>
+      <ul>
+        <li><strong>Consonant Sound</strong> দিয়ে শুরু হলে ➜ <code>a</code> (a book, a boy, a pen)।</li>
+        <li><strong>Vowel Sound (a, e, i, o, u)</strong> দিয়ে শুরু হলে ➜ <code>an</code> (an apple, an egg, an orange)।</li>
+        <li><strong>ব্যতিক্রম ১ (ইউ সাউন্ড):</strong> Vowel 'u' বা 'e' থাকা সত্ত্বেও উচ্চারণ 'ইউ' (/ju:/) হলে ➜ <code>a</code> বসে (a university, a European, a uniform, a useful animal)।</li>
+        <li><strong>ব্যতিক্রম ২ (ওয়া সাউন্ড):</strong> 'One' এর উচ্চারণ 'ওয়া' হওয়ায় ➜ <code>a</code> বসে (a one-taka note)।</li>
+        <li><strong>ব্যতিক্রম ৩ (Silent H):</strong> 'H' অনুচ্চারিত থাকলে ➜ <code>an</code> বসে (an honest man, an hour)।</li>
+        <li><strong>ব্যতিক্রম ৪ (সংক্ষিপ্ত পদবি):</strong> উচ্চারণ এ/অ দিয়ে শুরু হলে ➜ <code>an</code> বসে (an MP, an MBBS, an SSC student)।</li>
+        <li><strong>The-এর ব্যবহার:</strong> নির্দিষ্ট কোনো কিছু, পৃথিবী/সূর্য/চাঁদ (the sun, the earth), নদীর নাম (the Padma), বিখ্যাত সংবাদপত্র (the Daily Star), সর্বোচ্চ মাত্রা (the best, the longest) হলে ➜ <code>the</code> বসে।</li>
+      </ul>
+    </div>
+
+    <!-- Rule 3: Prepositions -->
+    <div class="rules-card">
+      <h3>📍 ৩. প্রিপজিশনের সহজ কৌশল</h3>
+      <ul>
+        <li><strong>At:</strong> ঘড়ির নির্দিষ্ট সময় (at 6 o'clock, at 9 a.m.), রাত (at night), দুপুর (at noon), স্কুল বা ছোট প্রতিষ্ঠান (at Azimia school)।</li>
+        <li><strong>In:</strong> মাসের নাম (in January), সালের নাম (in 1971), ঋতুর নাম (in winter), বড় শহর/দেশ (in Dhaka, in Bangladesh), সকাল/বিকাল (in the morning)।</li>
+        <li><strong>On:</strong> সপ্তাহের বার (on Friday, on Monday), নির্দিষ্ট তারিখ (on 26th March), কোনো তলের ওপর (on the table), পায়ে হেঁটে (on foot)।</li>
+        <li><strong>To:</strong> গন্তব্যের দিকে যাওয়া (go to school, travel to Sylhet), কারো প্রতি সদয় (kind to animals)।</li>
+        <li><strong>By:</strong> যাতায়াতের বাহন (by bus, by train, by boat)।</li>
+        <li><strong>With:</strong> কারো সাথে (play with cousins), কোনো হাতিয়ার দিয়ে (write with a pen)।</li>
+        <li><strong>For:</strong> কারো জন্য কিছু কেনা (gifts for son), সময়ের ব্যাপ্তি (for two hours)।</li>
+        <li><strong>Between vs Among:</strong> ২ জনের মধ্যে হলে <code>between</code>, ২-এর অধিক হলে <code>among</code>।</li>
+      </ul>
+    </div>
+
+    <!-- Rule 4: Rearrange -->
+    <div class="rules-card">
+      <h3>🧩 ৪. এলোমেলো বাক্য সাজানোর গঠন</h3>
+      <div class="rules-formula">👉 Assertive (বর্ণনামূলক): Subject + Verb + Object/Extension + Full stop (.)</div>
+      <div class="rules-formula">👉 Interrogative (প্রশ্নবোধক): Wh-word / Auxiliary + Subject + Verb + Object + (?)</div>
+      <div class="rules-formula">👉 Imperative (অনুরোধ/আদেশ): Verb + Object + Full stop (.)</div>
+      <div class="rules-formula">👉 Exclamatory (বিস্ময়সূচক): What a / How + Adjective + Subject + Verb + (!)</div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
+        ⚠️ মনে রাখবে: বাক্যের প্রথম অক্ষর সর্বদা বড় হাতের (Capital Letter) হবে এবং নামের প্রথম অক্ষর সর্বদা Capital হবে!
+      </p>
+    </div>
+  </main>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="app.navigate('home')">
+      <span class="nav-icon">🏠</span>
+      <span>হোম</span>
+    </button>
+    <button class="nav-item" onclick="app.navigate('practice')">
+      <span class="nav-icon">📝</span>
+      <span>প্র্যাকটিস</span>
+    </button>
+    <button class="nav-item" onclick="app.navigate('exam')">
+      <span class="nav-icon">⏱️</span>
+      <span>মডেল টেস্ট</span>
+    </button>
+    <button class="nav-item" onclick="app.navigate('mistakes')">
+      <span class="nav-icon">❌</span>
+      <span>ভুল খাতা</span>
+    </button>
+    <button class="nav-item" onclick="app.navigate('dashboard')">
+      <span class="nav-icon">📊</span>
+      <span>অগ্রগতি</span>
+    </button>
+  </nav>
+
+  <!-- RESULT MODAL -->
+  <div class="modal-overlay" id="examResultModal">
+    <div class="modal-content">
+      <div class="modal-icon" id="modalResultIcon">🎉</div>
+      <h3 class="modal-title" id="modalResultTitle">মডেল টেস্ট সম্পন্ন!</h3>
+      <p class="modal-text" id="modalResultSub">অসাধারণ প্রস্তুতি মুগ্ধ! নিচে তোমার রেজাল্ট দেখো:</p>
+      
+      <div style="background: #f8fafc; border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px;">
+        <div style="font-size: 32px; font-weight: 800; color: var(--primary);" id="modalScoreDisplay">18/20</div>
+        <div style="font-size: 14px; font-weight: 700; color: #059669;" id="modalPercentDisplay">৯০% স্কোর • গ্রেড: A+</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;" id="modalTimeDisplay">সময় লেগেছে: ০৫ মিনিট ১২ সেকেন্ড</div>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-secondary" style="flex: 1;" onclick="app.closeResultModalAndShowMistakes()">
+          ❌ ভুলগুলো দেখো
+        </button>
+        <button class="btn-primary" style="flex: 1;" onclick="app.closeResultModal()">
+          👍 ঠিক আছে
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DATA SCRIPTS (Loaded via script tags - Zero CORS problems offline & on Netlify) -->
+<script src="data/verbs.js"></script>
+<script src="data/rearrange.js"></script>
+<script src="data/articles.js"></script>
+<script src="data/prepositions.js"></script>
+
+<!-- APP LOGIC -->
+<script src="js/audio.js"></script>
+<script src="js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+
+</body>
+</html>

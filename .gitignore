@@ -1,0 +1,4 @@
+test_screenshots/
+scripts/
+*.zip
+.system_generated/

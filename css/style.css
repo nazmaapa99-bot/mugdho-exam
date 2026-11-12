@@ -701,6 +701,61 @@ body {
   line-height: 1.45;
 }
 
+/* 5 Extra Examples UI */
+.exp-examples-container {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #93c5fd;
+}
+
+.exp-examples-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.exp-example-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #1e293b;
+}
+
+.exp-example-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  background: var(--primary);
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.exp-example-text {
+  flex: 1;
+  word-break: break-word;
+}
+
+.mistake-examples-box, .history-examples-box {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px dashed #cbd5e1;
+}
+
 .action-bar {
   display: flex;
   gap: 10px;

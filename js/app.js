@@ -59,6 +59,16 @@ class MugdhoApp {
     this.renderHistory();
   }
 
+  escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   // -------------------------------------------------------------
   // STATE MANAGEMENT & LOCAL STORAGE PERSISTENCE
   // -------------------------------------------------------------
@@ -494,7 +504,8 @@ class MugdhoApp {
       isCorrect: isCorrect,
       translation: q.translation || '',
       explanation: q.explanation || '',
-      ruleTag: q.rule_tag || ''
+      ruleTag: q.rule_tag || '',
+      examples: q.examples || []
     };
 
     // 4. Prepend to Activity History & Live Save
@@ -538,6 +549,23 @@ class MugdhoApp {
     if (expAnswerText) expAnswerText.textContent = q.answer;
     if (expTransText) expTransText.textContent = q.translation || "বাংলা অনুবাদ উপলব্ধ।";
     if (expRuleText) expRuleText.textContent = q.explanation || "নিয়ম অনুযায়ী সঠিক বিকল্পটি নির্বাচন করা হয়েছে।";
+
+    const expExamplesSection = document.getElementById('expExamplesSection');
+    const expExamplesList = document.getElementById('expExamplesList');
+    if (expExamplesSection && expExamplesList) {
+      if (Array.isArray(q.examples) && q.examples.length > 0) {
+        expExamplesList.innerHTML = q.examples.map((ex, idx) => `
+          <div class="exp-example-item">
+            <span class="exp-example-num">${idx + 1}</span>
+            <span class="exp-example-text">${this.escapeHtml(ex)}</span>
+          </div>
+        `).join('');
+        expExamplesSection.style.display = 'block';
+      } else {
+        expExamplesSection.style.display = 'none';
+      }
+    }
+
     if (expCard) expCard.classList.add('active');
 
     // 6. Live Save Everything
@@ -557,6 +585,7 @@ class MugdhoApp {
         answer: q.answer,
         translation: q.translation,
         explanation: q.explanation,
+        examples: q.examples || [],
         rule_tag: q.rule_tag,
         date: new Date().toLocaleDateString('bn-BD'),
         mastered: false
@@ -699,6 +728,12 @@ class MugdhoApp {
         <div class="history-exp">
           💡 <strong>কেন এই উত্তর?</strong> ${item.explanation || 'ব্যাকরণগত নিয়ম অনুযায়ী সঠিক।'}
         </div>
+        ${Array.isArray(item.examples) && item.examples.length > 0 ? `
+          <div class="history-examples-box">
+            <div style="font-size:11px; font-weight:700; color:#4f46e5; margin-bottom:4px;">📚 আরও ৫টি সহজ উদাহরণ:</div>
+            ${item.examples.map((ex, i) => `<div style="font-size:11.5px; color:#334155; margin-bottom:3px; padding-left:4px; line-height:1.4;">• ${this.escapeHtml(ex)}</div>`).join('')}
+          </div>
+        ` : ''}
       `;
       container.appendChild(card);
     });
@@ -790,6 +825,12 @@ class MugdhoApp {
         <div class="mistake-exp">
           💡 <strong>কেন এই উত্তর?</strong> ${m.explanation}
         </div>
+        ${Array.isArray(m.examples) && m.examples.length > 0 ? `
+          <div class="mistake-examples-box">
+            <div style="font-size:11px; font-weight:700; color:#15803d; margin-bottom:4px;">📚 আরও ৫টি সহজ উদাহরণ:</div>
+            ${m.examples.map((ex, i) => `<div style="font-size:11.5px; color:#1e293b; margin-bottom:3px; padding-left:4px; line-height:1.4;">• ${this.escapeHtml(ex)}</div>`).join('')}
+          </div>
+        ` : ''}
       `;
       container.appendChild(card);
     });
@@ -811,7 +852,8 @@ class MugdhoApp {
       options: [m.answer, m.wrongChoice, "Option C", "Option D"].sort(() => Math.random() - 0.5),
       answer: m.answer,
       translation: m.translation,
-      explanation: m.explanation
+      explanation: m.explanation,
+      examples: m.examples || []
     }));
 
     this.practiceIndex = 0;
@@ -988,7 +1030,8 @@ class MugdhoApp {
         isCorrect: Boolean(isCorrect),
         translation: q.translation || '',
         explanation: q.explanation || '',
-        ruleTag: q.rule_tag || ''
+        ruleTag: q.rule_tag || '',
+        examples: q.examples || []
       });
     });
 

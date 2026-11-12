@@ -1,10 +1,15 @@
 {
-  "total_questions": 4000,
+  "total_questions": 9000,
   "subjects": {
     "verbs": 1000,
     "rearrange": 1000,
     "articles": 1000,
-    "prepositions": 1000
+    "prepositions": 1000,
+    "changing_sentences": 1000,
+    "punctuations": 1000,
+    "tense_change": 1000,
+    "parts_of_speech": 1000,
+    "verb_forms": 1000
   },
   "units": [
     "Unit 11: A Holiday Trip",

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>মুগ্ধ'র ইংলিশ মাস্টার | Class 4 English Exam & Practice</title>
-  <meta name="description" content="চতুর্থ শ্রেণির ইংরেজি (Units 11-18) এর জন্য ৪,০০০টি প্রশ্ন, মডেল টেস্ট ও সহজ ব্যাখ্যাসহ পূর্ণাঙ্গ মোবাইল প্র্যাকটিস অ্যাপ।">
+  <title>মুগ্ধ'র ইংলিশ মাস্টার | Class 4 English Exam & Practice (9,000 Questions)</title>
+  <meta name="description" content="চতুর্থ শ্রেণির ইংরেজি (Units 11-18) এর জন্য ৯টি বিষয়ে ৯,০০০টি প্রশ্ন, মডেল টেস্ট, ভুল খাতা ও লাইভ হিস্ট্রিসহ পূর্ণাঙ্গ মোবাইল প্র্যাকটিস অ্যাপ।">
   <meta name="theme-color" content="#4f46e5">
   
   <!-- Google Bengali Font -->
@@ -46,9 +46,9 @@
   <!-- SCREEN: HOME -->
   <main id="screen-home" class="screen active">
     <div class="hero-card">
-      <span class="hero-tag">🌟 ৪র্থ শ্রেণির চূড়ান্ত প্রস্তুতি</span>
+      <span class="hero-tag">🌟 ৪র্থ শ্রেণির চূড়ান্ত প্রস্তুতি • ৯,০০০ প্রশ্ন</span>
       <h2>স্বাগতম মুগ্ধ! 👋</h2>
-      <p>আজকের পরীক্ষার সব নিয়ম ও প্রশ্ন সহজে শিখে নাও। প্রতিটি বিষয়ে ১,০০০টি করে প্রশ্ন ও সহজ বাংলা ব্যাখ্যা রয়েছে!</p>
+      <p>ইংরেজি পরীক্ষার সব নিয়ম, প্রশ্ন ও ব্যাখ্যা এখানে রয়েছে। ৯টি গুরুত্বপূর্ণ বিষয়ের প্রতিটিতে ১,০০০টি করে প্রশ্ন রয়েছে!</p>
       <div class="hero-actions">
         <button class="btn-hero-primary" onclick="app.startQuickPractice()">
           🚀 দ্রুত প্র্যাকটিস শুরু
@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <!-- Quick Features -->
+    <!-- Quick Features Row -->
     <div class="quick-features-row">
       <div class="feature-pill-btn" onclick="app.navigate('exam')">
         <div class="f-icon">⏱️</div>
@@ -65,60 +65,124 @@
           <p>টাইমারসহ পরীক্ষা</p>
         </div>
       </div>
-      <div class="feature-pill-btn" onclick="app.navigate('mistakes')">
-        <div class="f-icon">❌</div>
+      <div class="feature-pill-btn" onclick="app.navigate('history')">
+        <div class="f-icon">📜</div>
         <div class="f-text">
-          <h4>ভুল খাতা</h4>
-          <p id="homeMistakesCount">০টি প্রশ্ন রিভিশন</p>
+          <h4>লাইভ হিস্ট্রি</h4>
+          <p id="homeHistoryCount">০টি প্রশ্ন সংরক্ষিত</p>
         </div>
       </div>
     </div>
 
-    <!-- 4 Main Subjects -->
+    <!-- Quick Mistakes Row -->
+    <div class="feature-pill-btn" style="width: 100%; margin-bottom: 16px; border-left: 4px solid #ef4444;" onclick="app.navigate('mistakes')">
+      <div class="f-icon">❌</div>
+      <div class="f-text">
+        <h4>ভুল উত্তরের খাতা (Mistakes Notebook)</h4>
+        <p id="homeMistakesCount">০টি প্রশ্ন রিভিশন প্রয়োজন</p>
+      </div>
+    </div>
+
+    <!-- 9 Main Subjects Section -->
     <div class="section-title">
       <span>📖 বিষয় নির্বাচন করো</span>
-      <span class="count-badge">৪টি বিষয় • ৪,০০০ প্রশ্ন</span>
+      <span class="count-badge">৯টি বিষয় • ৯,০০০ প্রশ্ন</span>
     </div>
 
     <div class="subject-grid">
-      <!-- Verbs -->
+      <!-- 1. Verbs -->
       <div class="subject-card" onclick="app.selectSubject('verbs')">
         <div class="subject-icon-box icon-verbs">⚡</div>
         <h3>Right Form of Verbs</h3>
-        <p class="sub-desc">ক্রিয়ার সঠিক রূপ ও টেন্সের ম্যাজিক নিয়ম</p>
+        <p class="sub-desc">ক্রিয়ার সঠিক রূপ ও টেন্সের ম্যাজিক ইন্ডিকেটর</p>
         <div class="sub-meta">
           <span>১,০০০ প্রশ্ন</span>
           <span>প্র্যাকটিস ➜</span>
         </div>
       </div>
 
-      <!-- Rearrange -->
+      <!-- 2. Rearrange -->
       <div class="subject-card" onclick="app.selectSubject('rearrange')">
         <div class="subject-icon-box icon-rearrange">🧩</div>
         <h3>Rearrange Sentences</h3>
-        <p class="sub-desc">শব্দ সাজিয়ে অর্থপূর্ণ বাক্য তৈরির কৌশল</p>
+        <p class="sub-desc">ইন্টারেক্টিভ শব্দ সাজিয়ে অর্থপূর্ণ বাক্য তৈরি</p>
         <div class="sub-meta">
           <span>১,০০০ প্রশ্ন</span>
           <span>প্র্যাকটিস ➜</span>
         </div>
       </div>
 
-      <!-- Articles -->
+      <!-- 3. Articles -->
       <div class="subject-card" onclick="app.selectSubject('articles')">
         <div class="subject-icon-box icon-articles">🅰️</div>
         <h3>Articles (A, An, The)</h3>
-        <p class="sub-desc">ধ্বনি, উচ্চারণ ও আর্টিকেল ব্যবহারের নিয়ম</p>
+        <p class="sub-desc">ধ্বনি, উচ্চারণ ও আর্টিকেল ব্যবহারের ব্যতিক্রমী নিয়ম</p>
         <div class="sub-meta">
           <span>১,০০০ প্রশ্ন</span>
           <span>প্র্যাকটিস ➜</span>
         </div>
       </div>
 
-      <!-- Prepositions -->
+      <!-- 4. Prepositions -->
       <div class="subject-card" onclick="app.selectSubject('prepositions')">
         <div class="subject-icon-box icon-prepositions">📍</div>
         <h3>Prepositions</h3>
         <p class="sub-desc">At, In, On, To, By, For এর সঠিক ব্যবহার</p>
+        <div class="sub-meta">
+          <span>১,০০০ প্রশ্ন</span>
+          <span>প্র্যাকটিস ➜</span>
+        </div>
+      </div>
+
+      <!-- 5. Changing Sentences -->
+      <div class="subject-card" onclick="app.selectSubject('changing_sentences')">
+        <div class="subject-icon-box icon-changing">🔄</div>
+        <h3>Changing Sentences</h3>
+        <p class="sub-desc">Assertive ↔ Interrogative বাক্য রূপান্তর</p>
+        <div class="sub-meta">
+          <span>১,০০০ প্রশ্ন</span>
+          <span>প্র্যাকটিস ➜</span>
+        </div>
+      </div>
+
+      <!-- 6. Punctuations & Capitals -->
+      <div class="subject-card" onclick="app.selectSubject('punctuations')">
+        <div class="subject-icon-box icon-punctuations">✍️</div>
+        <h3>Punctuations & Capitals</h3>
+        <p class="sub-desc">সঠিক বিরামচিহ্ন ও বড় হাতের অক্ষর নির্বাচন</p>
+        <div class="sub-meta">
+          <span>১,০০০ প্রশ্ন</span>
+          <span>প্র্যাকটিস ➜</span>
+        </div>
+      </div>
+
+      <!-- 7. Tense Change -->
+      <div class="subject-card" onclick="app.selectSubject('tense_change')">
+        <div class="subject-icon-box icon-tense">⏳</div>
+        <h3>Tense Change</h3>
+        <p class="sub-desc">Past ও Future টেন্সে সঠিক বাক্য রূপান্তর</p>
+        <div class="sub-meta">
+          <span>১,০০০ প্রশ্ন</span>
+          <span>প্র্যাকটিস ➜</span>
+        </div>
+      </div>
+
+      <!-- 8. Parts of Speech -->
+      <div class="subject-card" onclick="app.selectSubject('parts_of_speech')">
+        <div class="subject-icon-box icon-pos">🏷️</div>
+        <h3>Parts of Speech</h3>
+        <p class="sub-desc">বাক্যে চিহ্নিত শব্দের পদ নির্ণয় (৮ প্রকার)</p>
+        <div class="sub-meta">
+          <span>১,০০০ প্রশ্ন</span>
+          <span>প্র্যাকটিস ➜</span>
+        </div>
+      </div>
+
+      <!-- 9. Verb Forms -->
+      <div class="subject-card" style="grid-column: span 2;" onclick="app.selectSubject('verb_forms')">
+        <div class="subject-icon-box icon-verbforms">📖</div>
+        <h3>Verb Forms (V1, V2, V3 Conjugation)</h3>
+        <p class="sub-desc">Present, Past এবং Past Participle রূপের সঠিক ব্যবহার</p>
         <div class="sub-meta">
           <span>১,০০০ প্রশ্ন</span>
           <span>প্র্যাকটিস ➜</span>
@@ -136,7 +200,6 @@
   <!-- SCREEN: PRACTICE -->
   <main id="screen-practice" class="screen">
     <div class="practice-header">
-      <!-- Unit Scroller Filter -->
       <div class="unit-scroller" id="unitScroller">
         <div class="unit-chip active" onclick="app.filterUnit('all')">সকল অধ্যায়</div>
         <div class="unit-chip" onclick="app.filterUnit('Unit 11')">Unit 11: A Holiday Trip</div>
@@ -147,24 +210,22 @@
         <div class="unit-chip" onclick="app.filterUnit('Unit 16')">Unit 16: Nepalese Boy</div>
         <div class="unit-chip" onclick="app.filterUnit('Unit 17')">Unit 17: Mountains</div>
         <div class="unit-chip" onclick="app.filterUnit('Unit 18')">Unit 18: Caring Others</div>
-        <div class="unit-chip" onclick="app.filterUnit('Class 4 Grammar Master')">Grammar Master</div>
+        <div class="unit-chip" onclick="app.filterUnit('Grammar')">Grammar Master</div>
       </div>
     </div>
 
-    <!-- Question Metadata -->
     <div class="q-meta-bar">
       <span class="q-badge-unit" id="practiceUnitBadge">Unit 11</span>
       <span class="q-progress-text" id="practiceProgressText">প্রশ্ন: ১/১০০০</span>
     </div>
 
-    <!-- Question Card -->
     <div class="question-card" id="questionCard">
       <div class="rule-pill" id="practiceRuleTag">Rule: Tense Indicator</div>
       <div class="question-text" id="practiceQuestionText">
         Last week, we ________ (travel) to Sylhet by train.
       </div>
 
-      <!-- Rearrange Interactive Zone (Only shown for Rearrange) -->
+      <!-- Rearrange Interactive Zone -->
       <div class="rearrange-zone" id="rearrangeZone" style="display: none;">
         <div class="answer-slot-box" id="answerSlotBox" placeholder="নিচের শব্দগুলোতে ট্যাপ করে সাজাও..."></div>
         <div class="chip-pool" id="chipPool"></div>
@@ -176,11 +237,9 @@
       </div>
 
       <!-- MCQ Options Grid -->
-      <div class="options-grid" id="optionsGrid">
-        <!-- Rendered dynamically -->
-      </div>
+      <div class="options-grid" id="optionsGrid"></div>
 
-      <!-- Explanation Card (Appears after answer) -->
+      <!-- Explanation Card -->
       <div class="explanation-card" id="explanationCard">
         <div class="exp-status-pill" id="expStatusPill">
           <span>✅ সঠিক উত্তর!</span>
@@ -202,7 +261,6 @@
         </div>
       </div>
 
-      <!-- Action Buttons -->
       <div class="action-bar">
         <button class="btn-secondary" id="starQuestionBtn" onclick="app.toggleBookmarkCurrent()" title="স্টার দিয়ে রাখো">
           ⭐ স্টার দাও
@@ -216,7 +274,6 @@
 
   <!-- SCREEN: EXAM (MODEL TEST) -->
   <main id="screen-exam" class="screen">
-    <!-- Setup Box -->
     <div id="examSetupSection">
       <div class="exam-setup-box">
         <h3>⏱️ মডেল টেস্ট সেটআপ</h3>
@@ -227,11 +284,16 @@
         <div class="form-group">
           <label>বিষয় নির্বাচন করো:</label>
           <select id="examSubjectSelect" class="select-input">
-            <option value="mixed">🎯 অল-ইন-ওয়ান বোর্ড টেস্ট (সব বিষয়ের মিশ্রণ)</option>
+            <option value="mixed">🎯 অল-ইন-ওয়ান গ্র্যান্ড বোর্ড টেস্ট (সব ৯টি বিষয়ের মিশ্রণ)</option>
             <option value="verbs">⚡ Right Form of Verbs</option>
             <option value="rearrange">🧩 Rearrange Sentences</option>
             <option value="articles">🅰️ Articles (A, An, The)</option>
             <option value="prepositions">📍 Prepositions</option>
+            <option value="changing_sentences">🔄 Changing Sentences (Assertive ↔ Interrogative)</option>
+            <option value="punctuations">✍️ Punctuations & Capital Letters</option>
+            <option value="tense_change">⏳ Tense Change (Past & Future)</option>
+            <option value="parts_of_speech">🏷️ Parts of Speech Identification</option>
+            <option value="verb_forms">📖 Verb Forms (V1, V2, V3)</option>
           </select>
         </div>
 
@@ -241,7 +303,7 @@
             <option value="10">১০টি প্রশ্ন (দ্রুত পরীক্ষা)</option>
             <option value="20" selected>২০টি প্রশ্ন (স্ট্যান্ডার্ড টেস্ট)</option>
             <option value="50">৫০টি প্রশ্ন (পূর্ণাঙ্গ মডেল টেস্ট)</option>
-            <option value="100">১০০টি প্রশ্ন (গ্র্যান্ড এক্সাম)</option>
+            <option value="100">১০০টি প্রশ্ন (গ্র্যান্ড বোর্ড এক্সাম)</option>
           </select>
         </div>
 
@@ -261,7 +323,6 @@
       </div>
     </div>
 
-    <!-- Active Exam Container -->
     <div id="examActiveSection" style="display: none;">
       <div class="exam-timer-bar">
         <span>⏱️ সময় বাকি: <span class="timer-digits" id="examTimerDisplay">10:00</span></span>
@@ -288,7 +349,6 @@
       <p>মুগ্ধ, যে প্রশ্নগুলো ভুল হয়েছিল সেগুলো এখানে জমা আছে। প্রতিটি ভুল প্রশ্ন বুঝে নাও এবং دوبارہ প্র্যাকটিস করে ১০০% নিখুঁত করো!</p>
     </div>
 
-    <!-- Mistakes Filter & Action -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
       <span style="font-size: 13px; font-weight: 700;" id="mistakesTotalCount">মোট ভুল: ০টি</span>
       <button class="btn-hero-primary" style="padding: 6px 12px; font-size: 12px; background: #fee2e2; color: #991b1b;" onclick="app.practiceMistakesOnly()">
@@ -296,15 +356,79 @@
       </button>
     </div>
 
-    <!-- Mistakes List Container -->
-    <div id="mistakesListContainer">
-      <!-- Dynamically rendered -->
+    <div id="mistakesListContainer"></div>
+  </main>
+
+  <!-- SCREEN: DEDICATED LIVE ACTIVITY HISTORY -->
+  <main id="screen-history" class="screen">
+    <div class="history-hero">
+      <h2>📜 লাইভ হিস্ট্রি ও অ্যাক্টিভিটি রিপোর্ট</h2>
+      <p>মুগ্ধর সমাধান করা প্রতিটি প্রশ্নের বিস্তারিত রেকর্ড তারিখ, সময়, বিষয় ও ব্যাকরণ ব্যাখ্যাসহ লাইভ সংরক্ষিত থাকে।</p>
     </div>
+
+    <!-- Filters Box -->
+    <div class="history-filters-box">
+      <div class="filters-grid">
+        <div>
+          <label style="font-size:11px; font-weight:700; color:var(--text-muted);">📅 তারিখ ফিল্টার:</label>
+          <select id="historyDateFilter" class="select-input" style="padding:6px 10px; font-size:12px;" onchange="app.renderHistory()">
+            <option value="all">সকল তারিখ (All Dates)</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="font-size:11px; font-weight:700; color:var(--text-muted);">🎯 ফলাফল ফিল্টার:</label>
+          <select id="historyStatusFilter" class="select-input" style="padding:6px 10px; font-size:12px;" onchange="app.renderHistory()">
+            <option value="all">সব উত্তর (All)</option>
+            <option value="correct">✅ শুধু সঠিক (Correct)</option>
+            <option value="wrong">❌ শুধু ভুল (Wrong)</option>
+          </select>
+        </div>
+
+        <div class="filter-full">
+          <label style="font-size:11px; font-weight:700; color:var(--text-muted);">📚 বিষয় ফিল্টার:</label>
+          <select id="historySubjectFilter" class="select-input" style="padding:6px 10px; font-size:12px;" onchange="app.renderHistory()">
+            <option value="all">সকল বিষয় (All 9 Subjects)</option>
+            <option value="verbs">⚡ Right Form of Verbs</option>
+            <option value="rearrange">🧩 Rearrange Sentences</option>
+            <option value="articles">🅰️ Articles (A, An, The)</option>
+            <option value="prepositions">📍 Prepositions</option>
+            <option value="changing_sentences">🔄 Changing Sentences</option>
+            <option value="punctuations">✍️ Punctuations & Capitals</option>
+            <option value="tense_change">⏳ Tense Change</option>
+            <option value="parts_of_speech">🏷️ Parts of Speech</option>
+            <option value="verb_forms">📖 Verb Forms</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Live Stats Bar -->
+      <div class="history-stats-bar">
+        <span>মোট: <strong id="histTotalCount">0</strong></span>
+        <span style="color:#059669;">সঠিক: <strong id="histCorrectCount">0</strong></span>
+        <span style="color:#dc2626;">ভুল: <strong id="histWrongCount">0</strong></span>
+        <span style="color:#4f46e5;">একুরেসি: <strong id="histAccuracy">0%</strong></span>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+        <span style="font-size:11px; color:var(--text-muted);" id="histShowingCount">০টি রেকর্ড</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn-chip-action" style="background:#ecfdf5; color:#065f46; font-weight:700;" onclick="app.exportHistoryCSV()">
+            📥 ডাউনলোড CSV
+          </button>
+          <button class="btn-chip-action" style="background:#fee2e2; color:#991b1b;" onclick="app.clearHistory()">
+            🗑️ ক্লিয়ার
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Card List -->
+    <div id="historyListContainer"></div>
   </main>
 
   <!-- SCREEN: DASHBOARD -->
   <main id="screen-dashboard" class="screen">
-    <!-- Student Profile -->
     <div class="profile-box">
       <div class="profile-avatar">👦</div>
       <div class="profile-info">
@@ -313,7 +437,6 @@
       </div>
     </div>
 
-    <!-- Stats 4 Grid -->
     <div class="stats-grid-4">
       <div class="stat-box-card">
         <div class="num" id="dashTotalAttempted">0</div>
@@ -333,9 +456,9 @@
       </div>
     </div>
 
-    <!-- Subject Breakdown Progress -->
+    <!-- Subject Breakdown Progress (9 Subjects) -->
     <div class="progress-card">
-      <h4 style="font-size: 14px; font-weight: 800; margin-bottom: 12px;">📊 বিষয়ভিত্তিক অগ্রগতি</h4>
+      <h4 style="font-size: 14px; font-weight: 800; margin-bottom: 12px;">📊 বিষয়ভিত্তিক অগ্রগতি (৯টি বিষয়)</h4>
 
       <div class="progress-row">
         <div class="progress-row-header">
@@ -376,6 +499,56 @@
           <div class="bar-fill fill-prepositions" id="dashPrepositionsBar" style="width: 0%;"></div>
         </div>
       </div>
+
+      <div class="progress-row">
+        <div class="progress-row-header">
+          <span>🔄 Changing Sentences</span>
+          <span id="dashChangingSentencesProg">0/1000 (0%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-changing" id="dashChangingSentencesBar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="progress-row">
+        <div class="progress-row-header">
+          <span>✍️ Punctuations & Capitals</span>
+          <span id="dashPunctuationsProg">0/1000 (0%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-punctuations" id="dashPunctuationsBar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="progress-row">
+        <div class="progress-row-header">
+          <span>⏳ Tense Change</span>
+          <span id="dashTenseChangeProg">0/1000 (0%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-tense" id="dashTenseChangeBar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="progress-row">
+        <div class="progress-row-header">
+          <span>🏷️ Parts of Speech</span>
+          <span id="dashPartsOfSpeechProg">0/1000 (0%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-pos" id="dashPartsOfSpeechBar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="progress-row">
+        <div class="progress-row-header">
+          <span>📖 Verb Forms (V1, V2, V3)</span>
+          <span id="dashVerbFormsProg">0/1000 (0%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-verbforms" id="dashVerbFormsBar" style="width: 0%;"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Achievements & Badges -->
@@ -409,10 +582,9 @@
       </div>
     </div>
 
-    <!-- Reset stats -->
     <div style="text-align: center; margin-top: 10px;">
       <button class="btn-secondary" style="font-size: 12px; color: #94a3b8; border-color: #e2e8f0;" onclick="app.resetAllData()">
-        ⚠️ সব ডাটা ও অগ্রগতি রিসেট করো
+        ⚠️ সব ডাটা ও প্রগ্রেস রিসেট করো
       </button>
     </div>
   </main>
@@ -427,62 +599,74 @@
     <!-- Rule 1: Verbs Indicator -->
     <div class="rules-card">
       <h3>⚡ ১. টেন্স চেনার ৩ সেকেন্ডের ম্যাজিক ক্লু</h3>
-      <p>বাক্যের মধ্যে নিচের শব্দগুলো দেখলে সাথে সাথে সঠিক ভার্ব রূপ নির্বাচন করবে:</p>
       <div class="rules-formula">👉 yesterday, last night, ago, once থাকলে ➜ Past Form (V2) বসে।</div>
-      <p style="font-size: 12px; color: var(--text-muted);">যেমন: He visited (visit) Cox's Bazar last year.</p>
       <div class="rules-formula">👉 now, at this moment, look!, listen! থাকলে ➜ am/is/are + Verb-ing বসে।</div>
-      <p style="font-size: 12px; color: var(--text-muted);">যেমন: Look! The boy is planting (plant) a tree.</p>
       <div class="rules-formula">👉 always, daily, everyday, usually থাকলে ➜ Present Form (V1) বসে।</div>
-      <p style="font-size: 12px; color: var(--text-muted);">Subject একজন হলে Verb-এ s/es যোগ হবে: She walks to school.</p>
       <div class="rules-formula">👉 already, just, ever থাকলে ➜ Have/Has + V3 বসে।</div>
       <div class="rules-formula">👉 tomorrow, next week থাকলে ➜ Will + V1 বসে।</div>
       <div class="rules-formula">👉 can, could, should, must, to থাকলে ➜ মূল Verb (V1) বসে।</div>
     </div>
 
-    <!-- Rule 2: Articles -->
+    <!-- Rule 2: Changing Sentences -->
     <div class="rules-card">
-      <h3>🅰️ ২. আর্টিকেলের জাদুকরী নিয়ম (A, An, The)</h3>
-      <p>শব্দের প্রথম <strong>উচ্চারণ ধ্বনি</strong> লক্ষ্য করবে:</p>
+      <h3>🔄 ২. Assertive ও Interrogative পরিবর্তনের নিয়ম</h3>
+      <div class="rules-formula">👉 Auxiliary verb (am, is, are, was, were, have, has, can, will) থাকলে তা শুরুতে চলে আসবে এবং শেষে (?) হবে।</div>
+      <p style="font-size: 12px; color: var(--text-muted);">যেমন: He is a boy. ➜ Is he a boy?</p>
+      <div class="rules-formula">👉 Auxiliary না থাকলে Present-এ Do/Does এবং Past-এ Did শুরুতে বসবে (মূল Verb-টি V1 হবে)।</div>
+      <p style="font-size: 12px; color: var(--text-muted);">যেমন: He plays cricket. ➜ Does he play cricket?</p>
+      <p style="font-size: 12px; color: var(--text-muted);">Did he play cricket? ➜ He played cricket.</p>
+    </div>
+
+    <!-- Rule 3: Punctuations -->
+    <div class="rules-card">
+      <h3>✍️ ৩. বিরামচিহ্ন ও বড় হাতের অক্ষরের নিয়ম</h3>
       <ul>
-        <li><strong>Consonant Sound</strong> দিয়ে শুরু হলে ➜ <code>a</code> (a book, a boy, a pen)।</li>
-        <li><strong>Vowel Sound (a, e, i, o, u)</strong> দিয়ে শুরু হলে ➜ <code>an</code> (an apple, an egg, an orange)।</li>
-        <li><strong>ব্যতিক্রম ১ (ইউ সাউন্ড):</strong> Vowel 'u' বা 'e' থাকা সত্ত্বেও উচ্চারণ 'ইউ' (/ju:/) হলে ➜ <code>a</code> বসে (a university, a European, a uniform, a useful animal)।</li>
-        <li><strong>ব্যতিক্রম ২ (ওয়া সাউন্ড):</strong> 'One' এর উচ্চারণ 'ওয়া' হওয়ায় ➜ <code>a</code> বসে (a one-taka note)।</li>
-        <li><strong>ব্যতিক্রম ৩ (Silent H):</strong> 'H' অনুচ্চারিত থাকলে ➜ <code>an</code> বসে (an honest man, an hour)।</li>
-        <li><strong>ব্যতিক্রম ৪ (সংক্ষিপ্ত পদবি):</strong> উচ্চারণ এ/অ দিয়ে শুরু হলে ➜ <code>an</code> বসে (an MP, an MBBS, an SSC student)।</li>
-        <li><strong>The-এর ব্যবহার:</strong> নির্দিষ্ট কোনো কিছু, পৃথিবী/সূর্য/চাঁদ (the sun, the earth), নদীর নাম (the Padma), বিখ্যাত সংবাদপত্র (the Daily Star), সর্বোচ্চ মাত্রা (the best, the longest) হলে ➜ <code>the</code> বসে।</li>
+        <li>বাক্যের প্রথম অক্ষর সর্বদা <strong>Capital Letter</strong> হবে।</li>
+        <li>ব্যক্তি (Mitu, Riad), স্থান (Dhaka, Nepal, Sylhet), নদী (Padma), দিন (Friday), মাস (January) সর্বদা Capital Letter হবে।</li>
+        <li>সাধারণ বর্ণনায় শেষে Full stop (.), প্রশ্নে Question mark (?), বিস্ময়ে (!) এবং সম্বন্ধ প্রকাশে ('s) বসবে।</li>
       </ul>
     </div>
 
-    <!-- Rule 3: Prepositions -->
+    <!-- Rule 4: Tense Change -->
     <div class="rules-card">
-      <h3>📍 ৩. প্রিপজিশনের সহজ কৌশল</h3>
+      <h3>⏳ ৪. টেন্স রূপান্তরের নিয়ম (Past ও Future)</h3>
+      <div class="rules-formula">👉 Simple Past (Past Indefinite): Subject + Verb-এর Past Form (V2)।</div>
+      <div class="rules-formula">👉 Past Continuous: Subject + was/were + Verb-ing।</div>
+      <div class="rules-formula">👉 Past Perfect: Subject + had + Verb-এর Past Participle (V3)।</div>
+      <div class="rules-formula">👉 Simple Future: Subject + will + মূল Verb (V1)।</div>
+      <div class="rules-formula">👉 Future Continuous: Subject + will be + Verb-ing।</div>
+    </div>
+
+    <!-- Rule 5: Parts of Speech -->
+    <div class="rules-card">
+      <h3>🏷️ ৫. Parts of Speech (পদ পরিচয় - ৮ প্রকার)</h3>
       <ul>
-        <li><strong>At:</strong> ঘড়ির নির্দিষ্ট সময় (at 6 o'clock, at 9 a.m.), রাত (at night), দুপুর (at noon), স্কুল বা ছোট প্রতিষ্ঠান (at Azimia school)।</li>
-        <li><strong>In:</strong> মাসের নাম (in January), সালের নাম (in 1971), ঋতুর নাম (in winter), বড় শহর/দেশ (in Dhaka, in Bangladesh), সকাল/বিকাল (in the morning)।</li>
-        <li><strong>On:</strong> সপ্তাহের বার (on Friday, on Monday), নির্দিষ্ট তারিখ (on 26th March), কোনো তলের ওপর (on the table), পায়ে হেঁটে (on foot)।</li>
-        <li><strong>To:</strong> গন্তব্যের দিকে যাওয়া (go to school, travel to Sylhet), কারো প্রতি সদয় (kind to animals)।</li>
-        <li><strong>By:</strong> যাতায়াতের বাহন (by bus, by train, by boat)।</li>
-        <li><strong>With:</strong> কারো সাথে (play with cousins), কোনো হাতিয়ার দিয়ে (write with a pen)।</li>
-        <li><strong>For:</strong> কারো জন্য কিছু কেনা (gifts for son), সময়ের ব্যাপ্তি (for two hours)।</li>
-        <li><strong>Between vs Among:</strong> ২ জনের মধ্যে হলে <code>between</code>, ২-এর অধিক হলে <code>among</code>।</li>
+        <li><strong>Noun:</strong> কোনো কিছুর নাম (Riad, School, Padma, Book)।</li>
+        <li><strong>Pronoun:</strong> নামের পরিবর্তে বসে (He, She, They, It, We)।</li>
+        <li><strong>Adjective:</strong> দোষ, গুণ, অবস্থা, সংখ্যা (Good, Fresh, Little, Five)।</li>
+        <li><strong>Verb:</strong> কোনো কাজ করা (Play, Clean, Read, Go, Water)।</li>
+        <li><strong>Adverb:</strong> কীভাবে/কখন/কোথায় কাজ হয় (Quickly, Brightly, Daily)।</li>
+        <li><strong>Preposition:</strong> স্থান বা সময়ের পূর্বে অবস্থান (In, On, At, Under, With)।</li>
+        <li><strong>Conjunction:</strong> যুক্ত করে (And, But, Or)।</li>
+        <li><strong>Interjection:</strong> আকস্মিক আবেগ বা অনুভূতি (Hurrah!, Alas!)।</li>
       </ul>
     </div>
 
-    <!-- Rule 4: Rearrange -->
+    <!-- Rule 6: Articles -->
     <div class="rules-card">
-      <h3>🧩 ৪. এলোমেলো বাক্য সাজানোর গঠন</h3>
-      <div class="rules-formula">👉 Assertive (বর্ণনামূলক): Subject + Verb + Object/Extension + Full stop (.)</div>
-      <div class="rules-formula">👉 Interrogative (প্রশ্নবোধক): Wh-word / Auxiliary + Subject + Verb + Object + (?)</div>
-      <div class="rules-formula">👉 Imperative (অনুরোধ/আদেশ): Verb + Object + Full stop (.)</div>
-      <div class="rules-formula">👉 Exclamatory (বিস্ময়সূচক): What a / How + Adjective + Subject + Verb + (!)</div>
-      <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
-        ⚠️ মনে রাখবে: বাক্যের প্রথম অক্ষর সর্বদা বড় হাতের (Capital Letter) হবে এবং নামের প্রথম অক্ষর সর্বদা Capital হবে!
-      </p>
+      <h3>🅰️ ৬. আর্টিকেলের জাদুকরী নিয়ম (A, An, The)</h3>
+      <ul>
+        <li>Consonant Sound হলে ➜ <code>a</code> (a book, a boy)।</li>
+        <li>Vowel Sound হলে ➜ <code>an</code> (an apple, an egg)।</li>
+        <li>উচ্চারণ 'ইউ' (/ju:/) হলে ➜ <code>a</code> (a university, a European)।</li>
+        <li>উচ্চারণ 'ওয়া' হলে ➜ <code>a</code> (a one-taka note)।</li>
+        <li>Silent H হলে ➜ <code>an</code> (an honest man, an hour)।</li>
+        <li>The-এর ব্যবহার: একক বস্তু (the sun), নদী (the Padma), সংবাদপত্র (the Daily Star), Superlative (the best)।</li>
+      </ul>
     </div>
   </main>
 
-  <!-- BOTTOM NAVIGATION -->
+  <!-- 6-ITEM BOTTOM NAVIGATION -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="app.navigate('home')">
       <span class="nav-icon">🏠</span>
@@ -500,9 +684,13 @@
       <span class="nav-icon">❌</span>
       <span>ভুল খাতা</span>
     </button>
+    <button class="nav-item" onclick="app.navigate('history')">
+      <span class="nav-icon">📜</span>
+      <span>হিস্ট্রি</span>
+    </button>
     <button class="nav-item" onclick="app.navigate('dashboard')">
       <span class="nav-icon">📊</span>
-      <span>অগ্রগতি</span>
+      <span>ড্যাশবোর্ড</span>
     </button>
   </nav>
 
@@ -532,11 +720,16 @@
 
 </div>
 
-<!-- DATA SCRIPTS (Loaded via script tags - Zero CORS problems offline & on Netlify) -->
+<!-- DATA SCRIPTS (ALL 9 SUBJECTS LOADED OFFLINE / ZERO CORS) -->
 <script src="data/verbs.js"></script>
 <script src="data/rearrange.js"></script>
 <script src="data/articles.js"></script>
 <script src="data/prepositions.js"></script>
+<script src="data/changing_sentences.js"></script>
+<script src="data/punctuations.js"></script>
+<script src="data/tense_change.js"></script>
+<script src="data/parts_of_speech.js"></script>
+<script src="data/verb_forms.js"></script>
 
 <!-- APP LOGIC -->
 <script src="js/audio.js"></script>

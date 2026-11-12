@@ -1,5 +1,5 @@
-// Service Worker for Offline PWA Support
-const CACHE_NAME = 'mugdho-english-master-v1';
+// Service Worker for Offline PWA Support (v2.0)
+const CACHE_NAME = 'mugdho-english-master-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -10,6 +10,11 @@ const ASSETS_TO_CACHE = [
   './data/rearrange.js',
   './data/articles.js',
   './data/prepositions.js',
+  './data/changing_sentences.js',
+  './data/punctuations.js',
+  './data/tense_change.js',
+  './data/parts_of_speech.js',
+  './data/verb_forms.js',
   './manifest.json'
 ];
 

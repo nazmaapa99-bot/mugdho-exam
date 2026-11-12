@@ -1,7 +1,19 @@
 // ==========================================================================
-// MUGDHO'S ENGLISH MASTER - MAIN APPLICATION ENGINE
-// Responsive, Offline-First, Class 4 Exam & Practice System
+// MUGDHO'S ENGLISH MASTER - MAIN APPLICATION ENGINE (v2.0)
+// Complete 9 Subjects (9,000 Questions) with Persistent Live Activity History
 // ==========================================================================
+
+const SUBJECT_MAP = {
+  verbs: { name: "Right Form of Verbs", bn: "Right Form of Verbs", icon: "⚡", dataVar: "MUGDHO_VERBS" },
+  rearrange: { name: "Rearrange Sentences", bn: "Rearrange Sentences", icon: "🧩", dataVar: "MUGDHO_REARRANGE" },
+  articles: { name: "Articles (A, An, The)", bn: "Articles (A, An, The)", icon: "🅰️", dataVar: "MUGDHO_ARTICLES" },
+  prepositions: { name: "Prepositions", bn: "Prepositions", icon: "📍", dataVar: "MUGDHO_PREPOSITIONS" },
+  changing_sentences: { name: "Changing Sentences", bn: "Changing Sentences (Assertive ↔ Interrogative)", icon: "🔄", dataVar: "MUGDHO_CHANGING_SENTENCES" },
+  punctuations: { name: "Punctuations & Capitals", bn: "Punctuations & Capital Letters", icon: "✍️", dataVar: "MUGDHO_PUNCTUATIONS" },
+  tense_change: { name: "Tense Change", bn: "Tense Change (Past & Future)", icon: "⏳", dataVar: "MUGDHO_TENSE_CHANGE" },
+  parts_of_speech: { name: "Parts of Speech", bn: "Parts of Speech Identification", icon: "🏷️", dataVar: "MUGDHO_PARTS_OF_SPEECH" },
+  verb_forms: { name: "Verb Forms (V1, V2, V3)", bn: "Verb Forms (V1, V2, V3 Conjugation)", icon: "📖", dataVar: "MUGDHO_VERB_FORMS" }
+};
 
 class MugdhoApp {
   constructor() {
@@ -11,6 +23,11 @@ class MugdhoApp {
     this.practiceList = [];
     this.practiceIndex = 0;
     this.isAnswered = false;
+
+    // History filter states
+    this.historyFilterDate = 'all';
+    this.historyFilterSubject = 'all';
+    this.historyFilterStatus = 'all';
     
     // Rearrange state
     this.rearrangePool = [];
@@ -27,22 +44,23 @@ class MugdhoApp {
       timerHandle: null
     };
 
-    // Load or initialize user state from localStorage
+    // Load user state & persistent activity history
     this.loadState();
     this.updateStreak();
   }
 
   init() {
-    console.log("Initializing Mugdho English Master App...");
+    console.log("Initializing Mugdho English Master App v2.0 (9,000 Questions)...");
     this.bindEvents();
     this.updateHeaderStats();
     this.selectSubject('verbs', false); // default subject
     this.updateDashboard();
     this.renderMistakes();
+    this.renderHistory();
   }
 
   // -------------------------------------------------------------
-  // STATE MANAGEMENT & LOCAL STORAGE
+  // STATE MANAGEMENT & LOCAL STORAGE PERSISTENCE
   // -------------------------------------------------------------
   loadState() {
     const defaultData = {
@@ -58,16 +76,28 @@ class MugdhoApp {
         verbs: { attempted: 0, correct: 0 },
         rearrange: { attempted: 0, correct: 0 },
         articles: { attempted: 0, correct: 0 },
-        prepositions: { attempted: 0, correct: 0 }
+        prepositions: { attempted: 0, correct: 0 },
+        changing_sentences: { attempted: 0, correct: 0 },
+        punctuations: { attempted: 0, correct: 0 },
+        tense_change: { attempted: 0, correct: 0 },
+        parts_of_speech: { attempted: 0, correct: 0 },
+        verb_forms: { attempted: 0, correct: 0 }
       },
-      mistakes: [], // list of mistake objects
-      bookmarks: []  // list of starred IDs
+      mistakes: [],
+      bookmarks: []
     };
 
     const saved = localStorage.getItem('mugdho_app_data');
     if (saved) {
       try {
-        this.userData = Object.assign(defaultData, JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        this.userData = Object.assign(defaultData, parsed);
+        // Ensure all 9 subjectStats exist
+        Object.keys(SUBJECT_MAP).forEach(k => {
+          if (!this.userData.subjectStats[k]) {
+            this.userData.subjectStats[k] = { attempted: 0, correct: 0 };
+          }
+        });
       } catch (e) {
         this.userData = defaultData;
       }
@@ -75,11 +105,37 @@ class MugdhoApp {
       this.userData = defaultData;
       this.saveState();
     }
+
+    // Load Dedicated Full Activity History Ledger
+    try {
+      const savedHistory = localStorage.getItem('mugdho_full_history');
+      this.fullHistory = savedHistory ? JSON.parse(savedHistory) : [];
+      if (!Array.isArray(this.fullHistory)) this.fullHistory = [];
+    } catch (e) {
+      console.error("Error loading activity history:", e);
+      this.fullHistory = [];
+    }
   }
 
   saveState() {
-    localStorage.setItem('mugdho_app_data', JSON.stringify(this.userData));
+    try {
+      localStorage.setItem('mugdho_app_data', JSON.stringify(this.userData));
+    } catch (e) {
+      console.warn("Error saving userData to localStorage:", e);
+    }
     this.updateHeaderStats();
+  }
+
+  saveFullHistory() {
+    try {
+      localStorage.setItem('mugdho_full_history', JSON.stringify(this.fullHistory));
+    } catch (e) {
+      console.warn("Storage quota exceeded, keeping latest 2000 entries:", e);
+      this.fullHistory = this.fullHistory.slice(0, 2000);
+      try {
+        localStorage.setItem('mugdho_full_history', JSON.stringify(this.fullHistory));
+      } catch (err) {}
+    }
   }
 
   updateStreak() {
@@ -101,12 +157,16 @@ class MugdhoApp {
     const streakEl = document.getElementById('headerStreak');
     const starsEl = document.getElementById('headerStars');
     const homeMistakesEl = document.getElementById('homeMistakesCount');
+    const homeHistoryEl = document.getElementById('homeHistoryCount');
     
     if (streakEl) streakEl.textContent = this.userData.streak;
     if (starsEl) starsEl.textContent = this.userData.stars;
     
-    const unmastered = this.userData.mistakes.filter(m => !m.mastered).length;
+    const unmastered = (this.userData.mistakes || []).filter(m => !m.mastered).length;
     if (homeMistakesEl) homeMistakesEl.textContent = `${unmastered}টি প্রশ্ন রিভিশন`;
+
+    const totalHistory = (this.fullHistory || []).length;
+    if (homeHistoryEl) homeHistoryEl.textContent = `${totalHistory}টি প্রশ্ন সংরক্ষিত`;
   }
 
   toggleSound() {
@@ -123,7 +183,6 @@ class MugdhoApp {
   navigate(screenId) {
     if (window.soundFx) window.soundFx.playClick();
     
-    // Stop exam timer if navigating away during active exam
     if (this.currentScreen === 'exam' && screenId !== 'exam' && this.examState.active) {
       if (!confirm("তুমি কি পরীক্ষা ছেড়ে অন্য পেজে যেতে চাও? তোমার বর্তমান পরীক্ষা বাতিল হবে।")) {
         return;
@@ -140,13 +199,13 @@ class MugdhoApp {
       this.currentScreen = screenId;
     }
 
-    // Update bottom nav active state
     const navMap = {
       home: 0,
       practice: 1,
       exam: 2,
       mistakes: 3,
-      dashboard: 4
+      history: 4,
+      dashboard: 5
     };
     const navButtons = document.querySelectorAll('.bottom-nav .nav-item');
     if (navMap[screenId] !== undefined && navButtons[navMap[screenId]]) {
@@ -155,12 +214,13 @@ class MugdhoApp {
 
     if (screenId === 'dashboard') this.updateDashboard();
     if (screenId === 'mistakes') this.renderMistakes();
+    if (screenId === 'history') this.renderHistory();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // -------------------------------------------------------------
-  // SUBJECT SELECTION & PRACTICE SETUP
+  // SUBJECT SELECTION & DATA ACCESS (9 SUBJECTS)
   // -------------------------------------------------------------
   getRawSubjectData(subject) {
     switch (subject) {
@@ -168,8 +228,17 @@ class MugdhoApp {
       case 'rearrange': return window.MUGDHO_REARRANGE || [];
       case 'articles': return window.MUGDHO_ARTICLES || [];
       case 'prepositions': return window.MUGDHO_PREPOSITIONS || [];
+      case 'changing_sentences': return window.MUGDHO_CHANGING_SENTENCES || [];
+      case 'punctuations': return window.MUGDHO_PUNCTUATIONS || [];
+      case 'tense_change': return window.MUGDHO_TENSE_CHANGE || [];
+      case 'parts_of_speech': return window.MUGDHO_PARTS_OF_SPEECH || [];
+      case 'verb_forms': return window.MUGDHO_VERB_FORMS || [];
       default: return window.MUGDHO_VERBS || [];
     }
+  }
+
+  getSubjectDisplayName(subjectKey) {
+    return (SUBJECT_MAP[subjectKey] && SUBJECT_MAP[subjectKey].bn) || subjectKey;
   }
 
   selectSubject(subjectKey, shouldNavigate = true) {
@@ -184,7 +253,7 @@ class MugdhoApp {
   }
 
   startQuickPractice() {
-    const subjects = ['verbs', 'rearrange', 'articles', 'prepositions'];
+    const subjects = Object.keys(SUBJECT_MAP);
     const randomSub = subjects[Math.floor(Math.random() * subjects.length)];
     this.selectSubject(randomSub, true);
   }
@@ -201,7 +270,6 @@ class MugdhoApp {
     if (window.soundFx) window.soundFx.playClick();
     this.currentUnitFilter = unitName;
     
-    // Highlight chip
     const chips = document.querySelectorAll('#unitScroller .unit-chip');
     chips.forEach(c => {
       if ((unitName === 'all' && c.textContent.includes('সকল')) || c.textContent.includes(unitName)) {
@@ -220,9 +288,9 @@ class MugdhoApp {
       this.practiceList = [...allItems];
     } else {
       this.practiceList = allItems.filter(item => item.unit && item.unit.includes(this.currentUnitFilter));
+      if (this.practiceList.length === 0) this.practiceList = [...allItems];
     }
     
-    // Shuffle slightly or keep in order
     this.practiceIndex = 0;
     this.renderCurrentQuestion();
   }
@@ -238,7 +306,6 @@ class MugdhoApp {
     const q = this.practiceList[this.practiceIndex];
     this.isAnswered = false;
 
-    // Badges & Labels
     const unitBadge = document.getElementById('practiceUnitBadge');
     const ruleTag = document.getElementById('practiceRuleTag');
     const progText = document.getElementById('practiceProgressText');
@@ -247,15 +314,14 @@ class MugdhoApp {
     const expCard = document.getElementById('explanationCard');
     const rearrangeZone = document.getElementById('rearrangeZone');
 
-    if (unitBadge) unitBadge.textContent = q.unit || "English for Today";
+    const subInfo = SUBJECT_MAP[this.currentSubject] || { bn: "English", icon: "📖" };
+    if (unitBadge) unitBadge.textContent = `${subInfo.icon} ${subInfo.bn} • ${q.unit || 'Class 4'}`;
     if (ruleTag) ruleTag.textContent = q.rule_tag || "Grammar Rule";
     if (progText) progText.textContent = `প্রশ্ন: ${this.practiceIndex + 1}/${this.practiceList.length}`;
     if (qText) qText.innerHTML = q.question.replace(/________/g, '<span class="blank">________</span>');
 
-    // Hide explanation card
     if (expCard) expCard.classList.remove('active');
 
-    // Rearrange Mode vs Normal Mode
     if (this.currentSubject === 'rearrange') {
       if (rearrangeZone) rearrangeZone.style.display = 'block';
       this.setupRearrangeInteractive(q);
@@ -263,7 +329,6 @@ class MugdhoApp {
       if (rearrangeZone) rearrangeZone.style.display = 'none';
     }
 
-    // Render Options
     if (optionsGrid) {
       optionsGrid.innerHTML = '';
       const opts = q.options || [];
@@ -276,7 +341,6 @@ class MugdhoApp {
       });
     }
 
-    // Bookmark Star State
     const starBtn = document.getElementById('starQuestionBtn');
     if (starBtn) {
       const isStarred = this.userData.bookmarks.includes(`${this.currentSubject}_${q.id}`);
@@ -294,8 +358,6 @@ class MugdhoApp {
     
     this.rearrangePlaced = [];
     this.rearrangePool = (q.words && q.words.length > 0) ? [...q.words] : q.answer.replace(/[.?!]/g, '').split(' ');
-    
-    // Shuffle pool words for challenge
     this.rearrangePool.sort(() => Math.random() - 0.5);
 
     this.renderRearrangeChips();
@@ -306,7 +368,6 @@ class MugdhoApp {
     const chipPool = document.getElementById('chipPool');
     if (!answerSlot || !chipPool) return;
 
-    // Render Placed Words
     answerSlot.innerHTML = '';
     if (this.rearrangePlaced.length === 0) {
       answerSlot.innerHTML = '<span style="color:#94a3b8; font-size:13px;">নিচের শব্দগুলোতে ক্লিক করে বাক্য সাজাও...</span>';
@@ -320,7 +381,6 @@ class MugdhoApp {
       });
     }
 
-    // Render Pool
     chipPool.innerHTML = '';
     this.rearrangePool.forEach((word, idx) => {
       const chip = document.createElement('span');
@@ -377,15 +437,13 @@ class MugdhoApp {
   }
 
   // -------------------------------------------------------------
-  // OPTION CLICK & EVALUATION
+  // ANSWER PROCESSING & LIVE HISTORY RECORDING
   // -------------------------------------------------------------
   handleOptionClick(selectedOption, buttonEl, q) {
     if (this.isAnswered) return;
     
-    // Normalize string compare
     const isCorrect = selectedOption.trim().toLowerCase() === q.answer.trim().toLowerCase();
     
-    // UI Feedback
     const allButtons = document.querySelectorAll('#optionsGrid .option-btn');
     allButtons.forEach(btn => {
       const btnText = btn.querySelector('span').textContent.trim().toLowerCase();
@@ -406,10 +464,44 @@ class MugdhoApp {
   processAnswer(isCorrect, chosenText, q) {
     this.isAnswered = true;
 
-    // Record stats
+    // 1. Update High-level Stats
     this.userData.history.attempted += 1;
+    if (!this.userData.subjectStats[this.currentSubject]) {
+      this.userData.subjectStats[this.currentSubject] = { attempted: 0, correct: 0 };
+    }
     this.userData.subjectStats[this.currentSubject].attempted += 1;
 
+    // 2. Prepare Formatted Date & Time Strings
+    const now = new Date();
+    const dateKey = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    const dateDisplay = now.toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+    const timeDisplay = now.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    // 3. Construct Live History Ledger Entry
+    const historyItem = {
+      id: 'hist_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+      timestamp: now.getTime(),
+      dateKey: dateKey,
+      dateDisplay: dateDisplay,
+      timeDisplay: timeDisplay,
+      subjectKey: this.currentSubject,
+      subjectName: this.getSubjectDisplayName(this.currentSubject),
+      unit: q.unit || 'Class 4',
+      mode: this.examState.active ? 'মডেল টেস্ট (Exam)' : 'অনুশীলন (Practice)',
+      question: q.question,
+      userChoice: chosenText,
+      correctAnswer: q.answer,
+      isCorrect: isCorrect,
+      translation: q.translation || '',
+      explanation: q.explanation || '',
+      ruleTag: q.rule_tag || ''
+    };
+
+    // 4. Prepend to Activity History & Live Save
+    this.fullHistory.unshift(historyItem);
+    this.saveFullHistory();
+
+    // 5. Update Feedback UI
     const expCard = document.getElementById('explanationCard');
     const expStatusPill = document.getElementById('expStatusPill');
     const expAnswerText = document.getElementById('expAnswerText');
@@ -427,8 +519,7 @@ class MugdhoApp {
         expStatusPill.innerHTML = '<span>✅ অসাধারণ মুগ্ধ! সঠিক উত্তর! (+১০ স্টার)</span>';
       }
 
-      // Check if was in mistakes, mark mastered
-      const mistakeIdx = this.userData.mistakes.findIndex(m => m.id === q.id && m.subject === this.currentSubject);
+      const mistakeIdx = (this.userData.mistakes || []).findIndex(m => m.id === q.id && m.subject === this.currentSubject);
       if (mistakeIdx !== -1) {
         this.userData.mistakes[mistakeIdx].mastered = true;
       }
@@ -441,20 +532,20 @@ class MugdhoApp {
         expStatusPill.innerHTML = '<span>❌ ভুল হয়েছে! সঠিক নিয়মটি নিচে দেখে নাও:</span>';
       }
 
-      // Record to Mistakes Notebook
       this.recordMistake(q, chosenText);
     }
 
-    // Populate explanation
     if (expAnswerText) expAnswerText.textContent = q.answer;
     if (expTransText) expTransText.textContent = q.translation || "বাংলা অনুবাদ উপলব্ধ।";
     if (expRuleText) expRuleText.textContent = q.explanation || "নিয়ম অনুযায়ী সঠিক বিকল্পটি নির্বাচন করা হয়েছে।";
     if (expCard) expCard.classList.add('active');
 
+    // 6. Live Save Everything
     this.saveState();
   }
 
   recordMistake(q, chosenOption) {
+    if (!this.userData.mistakes) this.userData.mistakes = [];
     const existing = this.userData.mistakes.find(m => m.id === q.id && m.subject === this.currentSubject);
     if (!existing) {
       this.userData.mistakes.unshift({
@@ -480,7 +571,7 @@ class MugdhoApp {
       this.practiceIndex += 1;
       this.renderCurrentQuestion();
     } else {
-      alert("অভিনন্দন মুগ্ধ! তুমি এই অধ্যায়ের সব প্রশ্ন শেষ করেছ!");
+      alert("অভিনন্দন মুগ্ধ! তুমি এই বিষয়ের সব প্রশ্ন শেষ করেছ!");
       this.practiceIndex = 0;
       this.renderCurrentQuestion();
     }
@@ -505,6 +596,157 @@ class MugdhoApp {
       const isStarred = this.userData.bookmarks.includes(key);
       starBtn.textContent = isStarred ? '⭐ স্টার দেওয়া আছে' : '⭐ স্টার দাও';
       starBtn.style.color = isStarred ? '#ea580c' : 'inherit';
+    }
+  }
+
+  // -------------------------------------------------------------
+  // DEDICATED FULL ACTIVITY HISTORY (CUSTOM FILTERS)
+  // -------------------------------------------------------------
+  renderHistory() {
+    const container = document.getElementById('historyListContainer');
+    const dateSelect = document.getElementById('historyDateFilter');
+    const subjectSelect = document.getElementById('historySubjectFilter');
+    const statusSelect = document.getElementById('historyStatusFilter');
+
+    const totalEl = document.getElementById('histTotalCount');
+    const corrEl = document.getElementById('histCorrectCount');
+    const wrongEl = document.getElementById('histWrongCount');
+    const accEl = document.getElementById('histAccuracy');
+    const showingCountEl = document.getElementById('histShowingCount');
+
+    if (!container) return;
+
+    const list = this.fullHistory || [];
+
+    // 1. Populate Date Filter Dropdown with Unique Dates
+    if (dateSelect) {
+      const currentSelectedDate = dateSelect.value || 'all';
+      const uniqueDates = [...new Set(list.map(item => item.dateKey))].filter(Boolean);
+      dateSelect.innerHTML = '<option value="all">📅 সকল তারিখ (All Dates)</option>';
+      uniqueDates.forEach(dKey => {
+        const sampleItem = list.find(it => it.dateKey === dKey);
+        const opt = document.createElement('option');
+        opt.value = dKey;
+        opt.textContent = sampleItem ? sampleItem.dateDisplay : dKey;
+        dateSelect.appendChild(opt);
+      });
+      dateSelect.value = currentSelectedDate;
+    }
+
+    // 2. Read Active Filter Values
+    const filterDate = dateSelect ? dateSelect.value : 'all';
+    const filterSub = subjectSelect ? subjectSelect.value : 'all';
+    const filterStatus = statusSelect ? statusSelect.value : 'all';
+
+    // 3. Apply Filters
+    let filtered = list.filter(item => {
+      // Date filter
+      if (filterDate !== 'all' && item.dateKey !== filterDate) return false;
+      // Subject filter
+      if (filterSub !== 'all' && item.subjectKey !== filterSub) return false;
+      // Status filter
+      if (filterStatus === 'correct' && !item.isCorrect) return false;
+      if (filterStatus === 'wrong' && item.isCorrect) return false;
+      return true;
+    });
+
+    // 4. Update Stats Bar
+    const totalCount = filtered.length;
+    const correctCount = filtered.filter(it => it.isCorrect).length;
+    const wrongCount = totalCount - correctCount;
+    const accuracy = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+
+    if (totalEl) totalEl.textContent = totalCount;
+    if (corrEl) corrEl.textContent = correctCount;
+    if (wrongEl) wrongEl.textContent = wrongCount;
+    if (accEl) accEl.textContent = `${accuracy}%`;
+    if (showingCountEl) showingCountEl.textContent = `মোট ${list.length}টির মধ্যে ${totalCount}টি প্রদর্শিত`;
+
+    // 5. Render History Cards
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 40px 16px; background: white; border-radius: var(--radius-lg); border: 1px dashed #cbd5e1;">
+          <div style="font-size: 40px; margin-bottom: 8px;">📜</div>
+          <h4 style="font-size: 16px; font-weight: 700; color: #1e293b;">কোনো হিস্ট্রি রেকর্ড পাওয়া যায়নি</h4>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">মুগ্ধ প্রশ্ন সমাধান করলেই সাথে সাথে এখানে বিস্তারিত লগ যুক্ত হয়ে যাবে!</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = '';
+    // Show up to 200 items in view for ultra-fast mobile rendering
+    filtered.slice(0, 200).forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = `history-card ${item.isCorrect ? 'correct' : 'wrong'}`;
+      card.innerHTML = `
+        <div class="history-meta">
+          <span>📅 ${item.dateDisplay} • ${item.timeDisplay}</span>
+          <span class="history-badge-mode">${item.mode || 'অনুশীলন'}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-size:11px; font-weight:700; color:#4f46e5;">${item.subjectName || 'English'} • ${item.ruleTag || item.unit || ''}</span>
+          <span style="font-size:12px; font-weight:800; color:${item.isCorrect ? '#10b981' : '#ef4444'};">
+            ${item.isCorrect ? '✅ সঠিক' : '❌ ভুল'}
+          </span>
+        </div>
+        <div class="history-q">${idx + 1}. ${item.question}</div>
+        <div class="history-choices">
+          <div>তোমার উত্তর: <strong style="color:${item.isCorrect ? '#059669' : '#dc2626'};">${item.userChoice || 'অনুত্তরিত'}</strong></div>
+          ${!item.isCorrect ? `<div>সঠিক উত্তর: <strong style="color:#059669;">${item.correctAnswer}</strong></div>` : ''}
+        </div>
+        ${item.translation ? `<div style="font-size:12px; color:#0284c7; font-weight:600; margin-bottom:4px;">অনুবাদ: ${item.translation}</div>` : ''}
+        <div class="history-exp">
+          💡 <strong>কেন এই উত্তর?</strong> ${item.explanation || 'ব্যাকরণগত নিয়ম অনুযায়ী সঠিক।'}
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  exportHistoryCSV() {
+    if (!this.fullHistory || this.fullHistory.length === 0) {
+      alert("ডাউনলোড করার মতো কোনো হিস্ট্রি নেই!");
+      return;
+    }
+
+    let csvContent = "\uFEFF"; // UTF-8 BOM for Bangla characters in Excel
+    csvContent += "ID,Date,Time,Subject,Mode,Question,User Choice,Correct Answer,Status,Translation,Explanation\n";
+
+    this.fullHistory.forEach(item => {
+      const row = [
+        item.id,
+        item.dateKey,
+        item.timeDisplay,
+        item.subjectName,
+        item.mode,
+        `"${(item.question || '').replace(/"/g, '""')}"`,
+        `"${(item.userChoice || '').replace(/"/g, '""')}"`,
+        `"${(item.correctAnswer || '').replace(/"/g, '""')}"`,
+        item.isCorrect ? "CORRECT" : "WRONG",
+        `"${(item.translation || '').replace(/"/g, '""')}"`,
+        `"${(item.explanation || '').replace(/"/g, '""')}"`
+      ];
+      csvContent += row.join(",") + "\n";
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `mugdho_english_history_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  clearHistory() {
+    if (confirm("মুগ্ধ, তুমি কি নিশ্চিতভাবে তোমার সমস্ত প্র্যাকটিস হিস্ট্রি ও রেকর্ড মুছে ফেলতে চাও?")) {
+      this.fullHistory = [];
+      localStorage.removeItem('mugdho_full_history');
+      this.updateHeaderStats();
+      this.renderHistory();
+      alert("সমস্ত হিস্ট্রি সফলভাবে ক্লিয়ার করা হয়েছে!");
     }
   }
 
@@ -554,13 +796,12 @@ class MugdhoApp {
   }
 
   practiceMistakesOnly() {
-    const unmastered = this.userData.mistakes.filter(m => !m.mastered);
+    const unmastered = (this.userData.mistakes || []).filter(m => !m.mastered);
     if (unmastered.length === 0) {
       alert("কোনো অমীমাংসিত ভুল প্রশ্ন নেই! দারুণ কাজ মুগ্ধ!");
       return;
     }
 
-    // Map mistake items to practice list format
     this.practiceList = unmastered.map(m => ({
       id: m.id,
       unit: m.unit,
@@ -579,7 +820,7 @@ class MugdhoApp {
   }
 
   // -------------------------------------------------------------
-  // EXAM / MODEL TEST ENGINE
+  // EXAM / MODEL TEST ENGINE (9 SUBJECTS)
   // -------------------------------------------------------------
   startExam() {
     if (window.soundFx) window.soundFx.playClick();
@@ -590,16 +831,15 @@ class MugdhoApp {
 
     let pool = [];
     if (subject === 'mixed') {
-      const v = (window.MUGDHO_VERBS || []).slice(0, 150);
-      const r = (window.MUGDHO_REARRANGE || []).slice(0, 150);
-      const a = (window.MUGDHO_ARTICLES || []).slice(0, 150);
-      const p = (window.MUGDHO_PREPOSITIONS || []).slice(0, 150);
-      pool = [...v, ...r, ...a, ...p];
+      // Sample questions from all 9 subjects
+      Object.keys(SUBJECT_MAP).forEach(k => {
+        const data = this.getRawSubjectData(k);
+        pool.push(...data.slice(0, 100));
+      });
     } else {
       pool = this.getRawSubjectData(subject);
     }
 
-    // Pick random N questions
     const shuffled = [...pool].sort(() => Math.random() - 0.5);
     const selected = shuffled.slice(0, count);
 
@@ -613,7 +853,6 @@ class MugdhoApp {
       timerHandle: null
     };
 
-    // UI Toggle
     document.getElementById('examSetupSection').style.display = 'none';
     document.getElementById('examActiveSection').style.display = 'block';
 
@@ -668,13 +907,12 @@ class MugdhoApp {
         btn.onclick = () => {
           if (window.soundFx) window.soundFx.playClick();
           this.examState.userAnswers[this.examState.currentIndex] = opt;
-          // Auto advance to next question smoothly after a short beat
           setTimeout(() => {
             if (this.examState.currentIndex < total - 1) {
               this.examState.currentIndex += 1;
               this.renderExamQuestion();
             } else {
-              this.renderExamQuestion(); // refresh to show selection
+              this.renderExamQuestion();
             }
           }, 200);
         };
@@ -707,25 +945,56 @@ class MugdhoApp {
 
     let score = 0;
     const total = this.examState.questions.length;
+    const now = new Date();
+    const dateKey = now.toISOString().split('T')[0];
+    const dateDisplay = now.toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+    const timeDisplay = now.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
     this.examState.questions.forEach((q, idx) => {
       const userChoice = this.examState.userAnswers[idx];
       const isCorrect = userChoice && (userChoice.trim().toLowerCase() === q.answer.trim().toLowerCase());
       
       this.userData.history.attempted += 1;
+      if (this.userData.subjectStats[q.topic]) {
+        this.userData.subjectStats[q.topic].attempted += 1;
+      }
+
       if (isCorrect) {
         score += 1;
         this.userData.history.correct += 1;
         this.userData.stars += 15;
+        if (this.userData.subjectStats[q.topic]) {
+          this.userData.subjectStats[q.topic].correct += 1;
+        }
       } else {
         this.userData.history.wrong += 1;
         this.recordMistake(q, userChoice || 'অনুত্তরিত');
       }
+
+      // Log to Full Activity History Ledger
+      this.fullHistory.unshift({
+        id: 'exam_' + Date.now() + '_' + idx,
+        timestamp: now.getTime(),
+        dateKey: dateKey,
+        dateDisplay: dateDisplay,
+        timeDisplay: timeDisplay,
+        subjectKey: q.topic || 'mixed',
+        subjectName: this.getSubjectDisplayName(q.topic) || 'মডেল টেস্ট',
+        unit: q.unit || 'Class 4',
+        mode: 'মডেল টেস্ট (Exam)',
+        question: q.question,
+        userChoice: userChoice || 'অনুত্তরিত',
+        correctAnswer: q.answer,
+        isCorrect: Boolean(isCorrect),
+        translation: q.translation || '',
+        explanation: q.explanation || '',
+        ruleTag: q.rule_tag || ''
+      });
     });
 
     this.saveState();
+    this.saveFullHistory();
 
-    // Show Result Modal
     const pct = Math.round((score / total) * 100);
     let grade = "C";
     if (pct >= 80) grade = "A+ (অসাধারণ!)";
@@ -754,7 +1023,6 @@ class MugdhoApp {
 
     if (modal) modal.classList.add('active');
 
-    // Reset Exam UI to Setup
     document.getElementById('examSetupSection').style.display = 'block';
     document.getElementById('examActiveSection').style.display = 'none';
   }
@@ -777,7 +1045,7 @@ class MugdhoApp {
   }
 
   // -------------------------------------------------------------
-  // DASHBOARD
+  // DASHBOARD (9 SUBJECT PROGRESS BARS)
   // -------------------------------------------------------------
   updateDashboard() {
     const h = this.userData.history;
@@ -794,21 +1062,19 @@ class MugdhoApp {
     if (corrEl) corrEl.textContent = h.correct;
     if (wrongEl) wrongEl.textContent = h.wrong;
 
-    // Subject Bars
-    const subjects = ['verbs', 'rearrange', 'articles', 'prepositions'];
-    subjects.forEach(sub => {
+    // Render Progress for all 9 Subjects
+    Object.keys(SUBJECT_MAP).forEach(sub => {
       const stats = this.userData.subjectStats[sub] || { attempted: 0, correct: 0 };
       const subTotal = 1000;
       const subPct = Math.min(100, Math.round((stats.attempted / subTotal) * 100));
       
-      const progLbl = document.getElementById(`dash${sub.charAt(0).toUpperCase() + sub.slice(1)}Prog`);
-      const barFill = document.getElementById(`dash${sub.charAt(0).toUpperCase() + sub.slice(1)}Bar`);
+      const progLbl = document.getElementById(`dash${this.formatSubId(sub)}Prog`);
+      const barFill = document.getElementById(`dash${this.formatSubId(sub)}Bar`);
       
       if (progLbl) progLbl.textContent = `${stats.attempted}/${subTotal} (${subPct}%)`;
       if (barFill) barFill.style.width = `${subPct}%`;
     });
 
-    // Badges unlock
     const badgeStreak = document.getElementById('badge-streak');
     const badgeVerbs = document.getElementById('badge-verbs');
     const badgeRearrange = document.getElementById('badge-rearrange');
@@ -817,26 +1083,33 @@ class MugdhoApp {
     const badgeMaster = document.getElementById('badge-master');
 
     if (badgeStreak) badgeStreak.classList.toggle('locked', this.userData.streak < 3);
-    if (badgeVerbs) badgeVerbs.classList.toggle('locked', this.userData.subjectStats.verbs.attempted < 10);
-    if (badgeRearrange) badgeRearrange.classList.toggle('locked', this.userData.subjectStats.rearrange.attempted < 10);
-    if (badgeArticles) badgeArticles.classList.toggle('locked', this.userData.subjectStats.articles.attempted < 10);
-    if (badgePreps) badgePreps.classList.toggle('locked', this.userData.subjectStats.prepositions.attempted < 10);
+    if (badgeVerbs) badgeVerbs.classList.toggle('locked', (this.userData.subjectStats.verbs || {}).attempted < 10);
+    if (badgeRearrange) badgeRearrange.classList.toggle('locked', (this.userData.subjectStats.rearrange || {}).attempted < 10);
+    if (badgeArticles) badgeArticles.classList.toggle('locked', (this.userData.subjectStats.articles || {}).attempted < 10);
+    if (badgePreps) badgePreps.classList.toggle('locked', (this.userData.subjectStats.prepositions || {}).attempted < 10);
     if (badgeMaster) badgeMaster.classList.toggle('locked', total < 50);
+  }
+
+  formatSubId(subKey) {
+    // converts 'changing_sentences' -> 'Changing'
+    return subKey.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
   }
 
   resetAllData() {
     if (confirm("মুগ্ধ, তুমি কি নিশ্চিতভাবে তোমার সমস্ত স্টার ও প্র্যাকটিস স্কোর রিসেট করতে চাও?")) {
       localStorage.removeItem('mugdho_app_data');
+      localStorage.removeItem('mugdho_full_history');
+      this.fullHistory = [];
       this.loadState();
       this.updateHeaderStats();
       this.updateDashboard();
       this.renderMistakes();
-      alert("ডাটা সফলভাবে রিসেট করা হয়েছে!");
+      this.renderHistory();
+      alert("ডাটা ও ইতিহাস সফলভাবে রিসেট করা হয়েছে!");
     }
   }
 
   bindEvents() {
-    // Keyboard navigation (Enter / Space for next)
     window.addEventListener('keydown', (e) => {
       if (this.currentScreen === 'practice' && e.key === 'ArrowRight') {
         this.nextQuestion();
@@ -845,7 +1118,6 @@ class MugdhoApp {
   }
 }
 
-// Global bootstrap
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new MugdhoApp();
   window.app.init();

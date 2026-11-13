@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
+  <script>
+    // Global Cache-Busting and Auto-Update Controller (v3.0)
+    window.APP_BUILD_VERSION = 'v3.0.0-9000Q';
+    window.forceUpdateApp = function() {
+      if (confirm('মুগ্ধ, তুমি কি নতুন ভার্সন লোড করতে সমস্ত ক্যাশ ক্লিয়ার করতে চাও?')) {
+        if ('caches' in window) {
+          caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => {
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistrations().then(regs => {
+                regs.forEach(r => r.unregister());
+                window.location.reload(true);
+              });
+            } else {
+              window.location.reload(true);
+            }
+          });
+        } else {
+          window.location.reload(true);
+        }
+      }
+    };
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>মুগ্ধ'র ইংলিশ মাস্টার | Class 4 English Exam & Practice (9,000 Questions)</title>
@@ -39,6 +61,9 @@
       </div>
       <button class="icon-btn" id="soundToggleBtn" onclick="app.toggleSound()" title="সাউন্ড অন/অফ">
         🔊
+      </button>
+      <button class="icon-btn" onclick="forceUpdateApp()" title="নতুন আপডেট লোড করো" style="font-size: 13px;">
+        🔄
       </button>
     </div>
   </header>
@@ -744,8 +769,17 @@
 <script src="js/app.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!refreshing) {
+        refreshing = true;
+        window.location.reload();
+      }
+    });
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
+      navigator.serviceWorker.register('./sw.js?v=3.0.0').then(reg => {
+        reg.update();
+      }).catch(() => {});
     });
   }
 </script>

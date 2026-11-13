@@ -59,6 +59,21 @@ class MugdhoApp {
     this.renderHistory();
   }
 
+  normalizeSubjectKey(input) {
+    if (!input) return 'verbs';
+    const low = input.toLowerCase();
+    if (low.includes('verb') && !low.includes('form') && !low.includes('v1')) return 'verbs';
+    if (low.includes('rearrange')) return 'rearrange';
+    if (low.includes('article')) return 'articles';
+    if (low.includes('preposition')) return 'prepositions';
+    if (low.includes('changing') || low.includes('assertive') || low.includes('interrogative')) return 'changing_sentences';
+    if (low.includes('punct') || low.includes('capital')) return 'punctuations';
+    if (low.includes('tense')) return 'tense_change';
+    if (low.includes('part') || low.includes('speech')) return 'parts_of_speech';
+    if (low.includes('form') || low.includes('v1') || low.includes('conjugation')) return 'verb_forms';
+    return input;
+  }
+
   escapeHtml(str) {
     if (!str) return '';
     return String(str)
@@ -116,7 +131,7 @@ class MugdhoApp {
       this.saveState();
     }
 
-    // Load Dedicated Full Activity History Ledger
+    // Load Dedicated Full Activity History Ledger (with Dual-Persistence Recovery)
     try {
       const savedHistory = localStorage.getItem('mugdho_full_history');
       this.fullHistory = savedHistory ? JSON.parse(savedHistory) : [];
@@ -124,6 +139,12 @@ class MugdhoApp {
     } catch (e) {
       console.error("Error loading activity history:", e);
       this.fullHistory = [];
+    }
+
+    // Dual-persistence fallback: if fullHistory is empty, restore from userData.historyLedger
+    if (this.fullHistory.length === 0 && Array.isArray(this.userData.historyLedger) && this.userData.historyLedger.length > 0) {
+      this.fullHistory = [...this.userData.historyLedger];
+      this.saveFullHistory();
     }
   }
 
@@ -137,15 +158,32 @@ class MugdhoApp {
   }
 
   saveFullHistory() {
+    // Keep fullHistory capped at 1,000 entries to prevent mobile quota overflow
+    if (this.fullHistory.length > 1000) {
+      this.fullHistory = this.fullHistory.slice(0, 1000);
+    }
+
     try {
       localStorage.setItem('mugdho_full_history', JSON.stringify(this.fullHistory));
     } catch (e) {
-      console.warn("Storage quota exceeded, keeping latest 2000 entries:", e);
-      this.fullHistory = this.fullHistory.slice(0, 2000);
-      try {
-        localStorage.setItem('mugdho_full_history', JSON.stringify(this.fullHistory));
-      } catch (err) {}
+      console.warn("Storage quota exceeded, trimming history entries:", e);
+      const limits = [500, 250, 100, 50, 20];
+      for (const lim of limits) {
+        try {
+          this.fullHistory = this.fullHistory.slice(0, lim);
+          localStorage.setItem('mugdho_full_history', JSON.stringify(this.fullHistory));
+          break;
+        } catch (err) {}
+      }
     }
+
+    // Mirror recent 200 history items inside userData.historyLedger as fail-safe backup
+    try {
+      this.userData.historyLedger = this.fullHistory.slice(0, 200);
+      localStorage.setItem('mugdho_app_data', JSON.stringify(this.userData));
+    } catch (err) {}
+
+    this.updateHeaderStats();
   }
 
   updateStreak() {
@@ -443,7 +481,8 @@ class MugdhoApp {
     const target = q.answer.toLowerCase().replace(/[.?!,]/g, '').trim();
 
     const isCorrect = constructed === target;
-    this.processAnswer(isCorrect, constructed, q);
+    const userPlacedSentence = this.rearrangePlaced.join(' ');
+    this.processAnswer(isCorrect, userPlacedSentence, q);
   }
 
   // -------------------------------------------------------------
@@ -659,20 +698,27 @@ class MugdhoApp {
         opt.textContent = sampleItem ? sampleItem.dateDisplay : dKey;
         dateSelect.appendChild(opt);
       });
-      dateSelect.value = currentSelectedDate;
+      if (uniqueDates.includes(currentSelectedDate)) {
+        dateSelect.value = currentSelectedDate;
+      } else {
+        dateSelect.value = 'all';
+      }
     }
 
-    // 2. Read Active Filter Values
-    const filterDate = dateSelect ? dateSelect.value : 'all';
-    const filterSub = subjectSelect ? subjectSelect.value : 'all';
-    const filterStatus = statusSelect ? statusSelect.value : 'all';
+    // 2. Read Active Filter Values safely
+    const filterDate = (dateSelect && dateSelect.value) ? dateSelect.value : 'all';
+    const filterSub = (subjectSelect && subjectSelect.value) ? subjectSelect.value : 'all';
+    const filterStatus = (statusSelect && statusSelect.value) ? statusSelect.value : 'all';
 
-    // 3. Apply Filters
+    // 3. Apply Filters with Normalized Subject Matching
     let filtered = list.filter(item => {
       // Date filter
       if (filterDate !== 'all' && item.dateKey !== filterDate) return false;
       // Subject filter
-      if (filterSub !== 'all' && item.subjectKey !== filterSub) return false;
+      if (filterSub !== 'all') {
+        const itemKey = this.normalizeSubjectKey(item.subjectKey);
+        if (item.subjectKey !== filterSub && itemKey !== filterSub) return false;
+      }
       // Status filter
       if (filterStatus === 'correct' && !item.isCorrect) return false;
       if (filterStatus === 'wrong' && item.isCorrect) return false;
@@ -995,18 +1041,19 @@ class MugdhoApp {
     this.examState.questions.forEach((q, idx) => {
       const userChoice = this.examState.userAnswers[idx];
       const isCorrect = userChoice && (userChoice.trim().toLowerCase() === q.answer.trim().toLowerCase());
+      const subKey = this.normalizeSubjectKey(q.topic);
       
       this.userData.history.attempted += 1;
-      if (this.userData.subjectStats[q.topic]) {
-        this.userData.subjectStats[q.topic].attempted += 1;
+      if (this.userData.subjectStats[subKey]) {
+        this.userData.subjectStats[subKey].attempted += 1;
       }
 
       if (isCorrect) {
         score += 1;
         this.userData.history.correct += 1;
         this.userData.stars += 15;
-        if (this.userData.subjectStats[q.topic]) {
-          this.userData.subjectStats[q.topic].correct += 1;
+        if (this.userData.subjectStats[subKey]) {
+          this.userData.subjectStats[subKey].correct += 1;
         }
       } else {
         this.userData.history.wrong += 1;
@@ -1020,8 +1067,8 @@ class MugdhoApp {
         dateKey: dateKey,
         dateDisplay: dateDisplay,
         timeDisplay: timeDisplay,
-        subjectKey: q.topic || 'mixed',
-        subjectName: this.getSubjectDisplayName(q.topic) || 'মডেল টেস্ট',
+        subjectKey: subKey,
+        subjectName: this.getSubjectDisplayName(subKey) || 'মডেল টেস্ট',
         unit: q.unit || 'Class 4',
         mode: 'মডেল টেস্ট (Exam)',
         question: q.question,

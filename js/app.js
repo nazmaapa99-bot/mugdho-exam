@@ -109,7 +109,8 @@ class MugdhoApp {
         verb_forms: { attempted: 0, correct: 0 }
       },
       mistakes: [],
-      bookmarks: []
+      bookmarks: [],
+      answeredIds: {}
     };
 
     const saved = localStorage.getItem('mugdho_app_data');
@@ -332,11 +333,28 @@ class MugdhoApp {
 
   filterQuestions() {
     const allItems = this.getRawSubjectData(this.currentSubject);
+    let pool = [];
     if (this.currentUnitFilter === 'all') {
-      this.practiceList = [...allItems];
+      pool = [...allItems];
     } else {
-      this.practiceList = allItems.filter(item => item.unit && item.unit.includes(this.currentUnitFilter));
-      if (this.practiceList.length === 0) this.practiceList = [...allItems];
+      pool = allItems.filter(item => item.unit && item.unit.includes(this.currentUnitFilter));
+      if (pool.length === 0) pool = [...allItems];
+    }
+
+    // Smart Non-Repeating Question Ordering:
+    // Unanswered questions appear first so Mugdho never gets the same question repeatedly!
+    if (!this.userData.answeredIds) this.userData.answeredIds = {};
+    const answeredList = this.userData.answeredIds[this.currentSubject] || [];
+    const answeredSet = new Set(answeredList);
+
+    const unattempted = pool.filter(q => !answeredSet.has(q.id));
+    const alreadyAnswered = pool.filter(q => answeredSet.has(q.id));
+
+    if (unattempted.length > 0) {
+      this.practiceList = [...unattempted, ...alreadyAnswered];
+    } else {
+      // If all questions in this subject have been answered, shuffle for smart revision
+      this.practiceList = [...pool].sort(() => Math.random() - 0.5);
     }
     
     this.practiceIndex = 0;
@@ -558,6 +576,15 @@ class MugdhoApp {
     const expTransText = document.getElementById('expTranslationText');
     const expRuleText = document.getElementById('expRuleText');
 
+    // Record answered ID to prevent question repetition
+    if (!this.userData.answeredIds) this.userData.answeredIds = {};
+    if (!this.userData.answeredIds[this.currentSubject]) this.userData.answeredIds[this.currentSubject] = [];
+    if (!this.userData.answeredIds[this.currentSubject].includes(q.id)) {
+      this.userData.answeredIds[this.currentSubject].push(q.id);
+    }
+
+    const expRuleLabel = document.getElementById('expRuleLabel');
+
     if (isCorrect) {
       if (window.soundFx) window.soundFx.playCorrect();
       this.userData.history.correct += 1;
@@ -567,6 +594,14 @@ class MugdhoApp {
       if (expStatusPill) {
         expStatusPill.className = 'exp-status-pill exp-status-correct';
         expStatusPill.innerHTML = '<span>✅ অসাধারণ মুগ্ধ! সঠিক উত্তর! (+১০ স্টার)</span>';
+      }
+      if (expRuleLabel) {
+        expRuleLabel.textContent = '💡 কেন এটি সঠিক উত্তর? (সহজ নিয়ম ও কারণ)';
+        expRuleLabel.style.color = '#065f46';
+      }
+      if (expCard) {
+        expCard.style.borderColor = '#86efac';
+        expCard.style.background = '#f0fdf4';
       }
 
       const mistakeIdx = (this.userData.mistakes || []).findIndex(m => m.id === q.id && m.subject === this.currentSubject);
@@ -580,6 +615,14 @@ class MugdhoApp {
       if (expStatusPill) {
         expStatusPill.className = 'exp-status-pill exp-status-wrong';
         expStatusPill.innerHTML = '<span>❌ ভুল হয়েছে! সঠিক নিয়মটি নিচে দেখে নাও:</span>';
+      }
+      if (expRuleLabel) {
+        expRuleLabel.textContent = '💡 কেন ভুল হলো ও সঠিক নিয়ম কী?';
+        expRuleLabel.style.color = '#991b1b';
+      }
+      if (expCard) {
+        expCard.style.borderColor = '#fca5a5';
+        expCard.style.background = '#fef2f2';
       }
 
       this.recordMistake(q, chosenText);
@@ -605,7 +648,12 @@ class MugdhoApp {
       }
     }
 
-    if (expCard) expCard.classList.add('active');
+    if (expCard) {
+      expCard.classList.add('active');
+      setTimeout(() => {
+        expCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
 
     // 6. Live Save Everything
     this.saveState();
